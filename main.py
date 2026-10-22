@@ -108,8 +108,13 @@ def run(dry=False, client=vci, now=None):
             session_label = f"TRONG PHIÊN {now:%H:%M} {today:%d/%m/%Y}"
             data_note = "dữ liệu đang giao dịch, KL đã quy đổi ra cả ngày"
     else:
-        session, session_label = "CHIEU", f"CUỐI NGÀY {idx_last:%d/%m/%Y}"
-        data_note = f"dữ liệu đóng cửa {idx_last:%d/%m}"
+        session = "CHIEU"  # dữ liệu đã đóng cửa trọn phiên -> dùng để ghi nhật ký hiệu quả
+        if idx_last < today:
+            session_label = f"TRƯỚC PHIÊN {today:%d/%m/%Y}"
+            data_note = f"tham chiếu giá đóng cửa phiên {idx_last:%d/%m}"
+        else:
+            session_label = f"CUỐI NGÀY {idx_last:%d/%m/%Y}"
+            data_note = f"dữ liệu đóng cửa {idx_last:%d/%m}"
 
     all_syms = symbols_df["symbol"].tolist()
     cached = load_universe(now)
