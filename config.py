@@ -5,6 +5,7 @@ Muốn chỉnh ngưỡng lọc thì chỉ sửa file này.
 
 # ===================== LỚP 1: LỌC RÁC / THANH KHOẢN =====================
 MIN_VALUE20_VND = 3_000_000_000   # GTGD bình quân 20 phiên tối thiểu: 3 tỷ/phiên
+MIN_MEDIAN_VALUE20_VND = 1_500_000_000  # GTGD trung vị ≥1,5 tỷ (chống mã chỉ có vài phiên thoả thuận lớn)
 MIN_TRADE_DAYS = 18               # Phải có giao dịch ít nhất 18/20 phiên gần nhất
 MIN_PRICE_K = 5.0                 # Giá tối thiểu 5.000đ (đơn vị nghìn đồng)
 MIN_BARS = 200                    # Cần ít nhất 200 phiên lịch sử (để có MA200)
@@ -33,6 +34,9 @@ FEE_ROUNDTRIP = 0.004             # Phí mua + bán + thuế ~0.4%
 MIN_RR = 1.5                      # R:R (sau phí) tối thiểu để được MUA
 CHASE_LIMIT_PCT = 0.04            # Giá cao hơn vùng mua > 4% -> không mua đuổi
 RSI_OVERHEAT = 75
+# Mục tiêu chốt lời thực tế cho nắm giữ vài tuần
+T1_MAX_PCT = 0.15                 # Mục tiêu 1 tối đa +15%
+T2_MAX_PCT = 0.25                 # Mục tiêu 2 tối đa +25%
 
 # ===================== CHẤM ĐIỂM & XẾP HẠNG =====================
 W_TECH = 0.40

@@ -32,6 +32,7 @@ def technical_features(df, partial):
 
     last20 = completed.tail(20)
     value20 = float((last20["close"] * 1000 * last20["volume"]).mean())
+    median_value20 = float((last20["close"] * 1000 * last20["volume"]).median())
     trade_days = int((last20["volume"] > 0).sum())
 
     feat = df.copy()
@@ -66,6 +67,7 @@ def technical_features(df, partial):
         "price": price,
         "last_date": feat["date"].iloc[-1],
         "value20": value20,
+        "median_value20": median_value20,
         "trade_days": trade_days,
         "ma20": float(ma20.iloc[-1]),
         "ma50": float(ma50.iloc[-1]),
@@ -89,6 +91,8 @@ def technical_features(df, partial):
 def liquidity_filter(f, today):
     if f["value20"] < config.MIN_VALUE20_VND:
         return "thanh khoản < 3 tỷ"
+    if f["median_value20"] < config.MIN_MEDIAN_VALUE20_VND:
+        return "thanh khoản không đều"
     if f["trade_days"] < config.MIN_TRADE_DAYS:
         return "ít phiên giao dịch"
     if f["price"] < config.MIN_PRICE_K:
@@ -332,6 +336,10 @@ def compute_zones(df, f):
     t1 = res[0] if res else entry + 2 * risk
     nxt = [h for h in res if h >= t1 * 1.03]
     t2 = nxt[0] if nxt else max(t1 + risk, entry + 3 * risk)
+    # Giới hạn mục tiêu cho thực tế (kháng cự quá xa không dùng làm mục tiêu ngắn hạn)
+    t1 = min(t1, entry * (1 + config.T1_MAX_PCT), entry + 2.5 * risk)
+    t2 = min(max(t2, t1 * 1.03), entry * (1 + config.T2_MAX_PCT), entry + 4 * risk)
+    t2 = max(t2, t1)
 
     fee = entry * config.FEE_ROUNDTRIP
     rr1 = (t1 - entry - fee) / (risk + fee) if risk > 0 else 0
