@@ -180,7 +180,7 @@ def advise(x, market):
     if not above50:
         cons.append(f"giá dưới MA50 ({ma50:,.2f}) – xu hướng trung hạn đang yếu")
     if not strong:
-        cons.append(f"RSI {rsi:.0f} < 50 – lực mua chưa quay lại")
+        cons.append(f"RSI {rsi:.0f} dưới 50 – lực mua chưa quay lại")
     if f["pdi"] < f["mdi"] and x["adx"] >= 25:
         cons.append("ADX cao nhưng là xu hướng GIẢM")
     if x.get("pe") and x["pe"] > 25:
@@ -262,7 +262,7 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
     blocks.append("━━━━━━━━━━━━━━\n"
                   "📌 <b>Cách dùng V2:</b> chỉ mua mã ✅, chia 2 lần trong vùng mua. Tới +5% bán 1/2 và dời cắt lỗ về giá vốn; "
                   "phần còn lại giữ tới +12% hoặc hết ~20 phiên. Mã ⏳ chỉ theo dõi.\n"
-                  "📊 Backtest: TOP5 V2 ngang VN-Index; lọc thêm 'giá > MA50 & RSI ≥ 50' giúp hơn ~2%/20 phiên ở cả 2023-25 và 2026. "
+                  "📊 Backtest: TOP5 V2 ngang VN-Index; lọc thêm 'giá trên MA50 và RSI từ 50' giúp hơn ~2%/20 phiên ở cả 2023-25 và 2026. "
                   "Mức chốt lời/cắt lỗ lấy từ phân bố lãi lỗ lịch sử, chưa mô phỏng theo từng phiên.\n"
                   "<i>Bot tham khảo, không phải khuyến nghị đầu tư.</i>")
     return report.split_messages(header, blocks)
