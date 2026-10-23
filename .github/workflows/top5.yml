@@ -1,4 +1,4 @@
-name: Claude Bot TOP5
+name: TOP 5 CO PHIEU HANG NGAY CLAUDE
 
 on:
   workflow_dispatch:
