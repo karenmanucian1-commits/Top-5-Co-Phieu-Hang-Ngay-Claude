@@ -15,6 +15,7 @@ Chạy:  python main_v2.py   |   python main_v2.py --dry
 """
 import argparse
 import html
+import json
 import logging
 import os
 import sys
@@ -34,6 +35,51 @@ VN_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 LOG_V2 = os.path.join(config.DATA_DIR, "picks_log_v2.csv")
 LOG_V1 = os.path.join(config.DATA_DIR, "picks_log.csv")
 HOLD_DAYS = 20
+PROBS_PATH = os.path.join(config.DATA_DIR, "target_probs.json")
+
+
+def load_probs():
+    try:
+        with open(PROBS_PATH, encoding="utf-8") as fh:
+            return json.load(fh)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+PROBS = load_probs()
+
+
+DEFAULT_PLAN = {"luot": ([2, 3, 5], 0.05, 10), "giu": ([5, 10, 15], 0.15, 60)}
+
+
+def target_plan(atr_pct, key):
+    """3 mốc chốt lời cho kiểu 'luot' (lướt sóng) hoặc 'giu' (nắm giữ) theo xác suất lịch sử.
+    Mốc 1 ~ khả năng chạm >=60%, Mốc 2 ~ >=45%, Mốc 3 ~ >=30%."""
+    lv_def, stop_def, hz_def = DEFAULT_PLAN[key]
+    if not PROBS or key not in PROBS:
+        return {"levels": [(m, None, None) for m in lv_def], "stop": stop_def, "horizon": hz_def, "stop_p": None}
+    sec = PROBS[key]
+    meta = PROBS["_meta"]
+    grp = "all"
+    for lo, hi, name in zip(meta["vol_bins"][:-1], meta["vol_bins"][1:], meta["vol_names"]):
+        if lo <= atr_pct < hi and name in sec:
+            grp = name
+    tab = sec[grp]
+    lv = sorted(int(k) for k in tab if k.isdigit())
+
+    def pick(tp, after):
+        c = [x for x in lv if x > after and tab[str(x)]["p"] >= tp]
+        return max(c) if c else None
+
+    m1 = pick(60, 0) or lv[0]
+    m2 = pick(45, m1) or next((x for x in lv if x > m1), m1)
+    m3 = pick(30, m2) or next((x for x in lv if x > m2), m2)
+    levels = []
+    for m in dict.fromkeys([m1, m2, m3]):
+        levels.append((m, tab[str(m)]["p"], tab[str(m)]["days"]))
+    return {"levels": levels, "stop": sec["stop"], "horizon": sec["horizon"], "stop_p": tab.get("stop")}
+
+
 FACTORS = [("margin", True), ("roe", True), ("pb", True), ("atr_pct", False), ("adx", True)]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -150,8 +196,8 @@ def advise(x, market):
     Điều kiện MUA (kiểm tra trên dữ liệu: alpha 20 phiên cao hơn ~2% ở cả 2023-2025 và 2026):
         giá > MA50  và  RSI14 >= 50   (DN tốt + giá đang khoẻ)
     Ngược lại -> CHỜ (DN tốt nhưng giá đang yếu, mua sớm thường bị kẹp).
-    Chốt lời/cắt lỗ dựa trên phân bố lợi nhuận 20 phiên của nhóm MUA trong backtest:
-        25% tốt nhất lãi >= +4.7%, 10% tốt nhất >= +12%; 10% tệ nhất lỗ <= -7.7%.
+    Mốc chốt lời: lấy từ data/target_probs.json (backtest_targets.py) – tỷ lệ giá chạm mốc
+        trong 60 phiên trước khi dính cắt lỗ -15%, theo nhóm biến động của mã.
     """
     f = x["f"]
     p, atr, ma20, ma50, rsi = x["now_price"], f["atr"], f["ma20"], f["ma50"], f["rsi"]
@@ -161,10 +207,10 @@ def advise(x, market):
 
     z_low = max(p - atr, ma50 if above50 else p - atr)
     z_high = p * 1.01
-    stop_pct = min(max(2.5 * atr / p, 0.05), 0.08)          # 5%–8%
-    stop = min(p * (1 - stop_pct), ma50 * 0.98) if above50 else p * (1 - stop_pct)
-    stop = max(stop, p * 0.92)
-    t1, t2 = p * 1.05, p * 1.12
+    luot = target_plan(x["atr_pct"], "luot")
+    giu = target_plan(x["atr_pct"], "giu")
+    stop = p * (1 - giu["stop"])
+    t1, t2 = p * (1 + giu["levels"][0][0] / 100), p * (1 + giu["levels"][-1][0] / 100)
 
     pros, cons = [], []
     if x["margin"] is not None and x["margin"] >= 20:
@@ -200,7 +246,7 @@ def advise(x, market):
             need.append("RSI vượt 50")
         advice = "⏳ <b>CHỜ</b> – doanh nghiệp tốt nhưng giá đang yếu. Chỉ mua khi " + " và ".join(need)
     return {"action": action, "advice": advice, "zone_low": z_low, "zone_high": z_high,
-            "stop": stop, "t1": t1, "t2": t2, "pros": pros[:3], "cons": cons[:3]}
+            "stop": stop, "t1": t1, "t2": t2, "luot": luot, "giu": giu, "pros": pros[:3], "cons": cons[:3]}
 
 
 def _pct(v):
@@ -230,7 +276,8 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
         L += ["", "🏆 <b>TOP 5:</b> " + " · ".join(f"{x['symbol']}{'✅' if x['action'] == 'MUA' else '⏳'}" for x in top)]
         if prio:
             L.append(f"⭐ <b>ƯU TIÊN #1: {prio['symbol']}</b> – mua {prio['zone_low']:,.2f}–{prio['zone_high']:,.2f}, "
-                     f"chốt lời {prio['t1']:,.2f} / {prio['t2']:,.2f}, cắt lỗ {prio['stop']:,.2f}")
+                     f"lướt sóng chốt " + " / ".join(f"{prio['now_price'] * (1 + m / 100):,.2f}" for m, *_ in prio['luot']['levels'])
+                     + f"; nắm giữ chốt " + " / ".join(f"{prio['now_price'] * (1 + m / 100):,.2f}" for m, *_ in prio['giu']['levels']))
         else:
             L.append("⭐ <b>ƯU TIÊN #1: CHƯA CÓ</b> – cả 5 mã đều đang yếu về giá, kiên nhẫn chờ")
     if perf1 or perf2:
@@ -248,8 +295,18 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
              f"💰 Giá: <b>{p:,.2f}</b> ({_pct(chg)})",
              x["advice"],
              f"🟢 Vùng mua: <b>{x['zone_low']:,.2f} – {x['zone_high']:,.2f}</b>",
-             f"🎯 Chốt lời: <b>{x['t1']:,.2f}</b> (+5%, bán 1/2) → <b>{x['t2']:,.2f}</b> (+12%) – hoặc hết 20 phiên",
-             f"🛑 Cắt lỗ: <b>{x['stop']:,.2f}</b> (−{(1 - x['stop'] / p) * 100:.1f}%) – đóng cửa dưới mức này thì bán",
+        ]
+        for key, title in (("luot", "⚡ <b>LƯỚT SÓNG</b>"), ("giu", "📦 <b>NẮM GIỮ</b>")):
+            pl = x[key]
+            b.append(f"{title} (tối đa {pl['horizon']} phiên, cắt lỗ −{pl['stop'] * 100:.0f}% = {p * (1 - pl['stop']):,.2f}):")
+            n = len(pl["levels"])
+            for k, (m, prob, days) in enumerate(pl["levels"], 1):
+                frac = "hết" if k == n else f"1/{n}"
+                ptxt = (f"{prob:.0f}% chạm" + (f", ~{days} phiên" if days else "")) if prob is not None else "chưa có thống kê"
+                b.append(f"   Mốc {k}: <b>{p * (1 + m / 100):,.2f}</b> (+{m}%) → bán {frac} | {ptxt}")
+            if pl.get("stop_p") is not None:
+                b.append(f"   (khả năng dính cắt lỗ: {pl['stop_p']:.0f}%)")
+        b += [
              f"🏢 TC: Biên LN {x['margin']:.1f}% · ROE {x['roe']:.1f}% · P/B {x['pb']:.1f}"
              + (f" · P/E {x['pe']:.1f}" if x.get("pe") else ""),
              f"📈 KT: RSI {f['rsi']:.0f} · ADX {x['adx']:.0f} · MA50 {f['ma50']:,.2f} · "
@@ -260,10 +317,9 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
             b.append("👎 " + "; ".join(x["cons"]))
         blocks.append("\n".join(b))
     blocks.append("━━━━━━━━━━━━━━\n"
-                  "📌 <b>Cách dùng V2:</b> chỉ mua mã ✅, chia 2 lần trong vùng mua. Tới +5% bán 1/2 và dời cắt lỗ về giá vốn; "
-                  "phần còn lại giữ tới +12% hoặc hết ~20 phiên. Mã ⏳ chỉ theo dõi.\n"
-                  "📊 Backtest: TOP5 V2 ngang VN-Index; lọc thêm 'giá trên MA50 và RSI từ 50' giúp hơn ~2%/20 phiên ở cả 2023-25 và 2026. "
-                  "Mức chốt lời/cắt lỗ lấy từ phân bố lãi lỗ lịch sử, chưa mô phỏng theo từng phiên.\n"
+                  "📌 <b>Cách dùng V2:</b> chỉ mua mã ✅, chia 2 lần trong vùng mua. Chọn 1 kiểu: ⚡ lướt sóng hoặc 📦 nắm giữ, "
+                  "đặt sẵn lệnh bán ở từng mốc. Chạm Mốc 1 thì dời cắt lỗ lên giá vốn. Nhớ T+2.5. Mã ⏳ chỉ theo dõi.\n"
+                  "📊 Tỷ lệ chạm mốc tính từ backtest các lệnh ✅ 2023–nay, đã tính T+2.5. Lãi thực = mốc − ~0.4% phí.\n"
                   "<i>Bot tham khảo, không phải khuyến nghị đầu tư.</i>")
     return report.split_messages(header, blocks)
 
