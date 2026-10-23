@@ -13,24 +13,26 @@ COLS = ["run_date", "session", "rank", "symbol", "price", "entry", "stop", "t1",
         "status", "priority", "final_score"]
 
 
-def log_picks(rows):
+def log_picks(rows, path=None):
+    LOG_PATH_ = path or LOG_PATH
     os.makedirs(config.DATA_DIR, exist_ok=True)
     new = pd.DataFrame(rows, columns=COLS)
-    if os.path.exists(LOG_PATH):
-        old = pd.read_csv(LOG_PATH)
+    if os.path.exists(LOG_PATH_):
+        old = pd.read_csv(LOG_PATH_)
         # chạy lại cùng ngày cùng phiên thì ghi đè
         key = (old["run_date"].astype(str) == str(new["run_date"].iloc[0])) & \
               (old["session"] == new["session"].iloc[0])
         old = old[~key]
         new = pd.concat([old, new], ignore_index=True)
-    new.to_csv(LOG_PATH, index=False)
+    new.to_csv(LOG_PATH_, index=False)
 
 
-def evaluate(price_map, idx_df, lookbacks=(5, 20)):
+def evaluate(price_map, idx_df, lookbacks=(5, 20), path=None):
+    path = path or LOG_PATH
     """So sánh giá hiện tại với giá lúc bot chọn (chỉ dùng lượt CHIỀU = giá đóng cửa)."""
-    if not os.path.exists(LOG_PATH):
+    if not os.path.exists(path):
         return []
-    log = pd.read_csv(LOG_PATH)
+    log = pd.read_csv(path)
     log = log[log["session"] == "CHIEU"]
     if log.empty:
         return []
