@@ -34,6 +34,8 @@ from main import get_ratios_cached, load_cache, load_universe, save_cache
 VN_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 LOG_V2 = os.path.join(config.DATA_DIR, "picks_log_v2.csv")
 LOG_V1 = os.path.join(config.DATA_DIR, "picks_log.csv")
+TOP_N_V2 = 10        # backtest: mã ✅ hạng 6-10 (thậm chí tới 20) hiệu quả ngang hạng 1-5
+MAX_SECTOR_V2 = 3
 HOLD_DAYS = 20
 PROBS_PATH = os.path.join(config.DATA_DIR, "target_probs.json")
 
@@ -153,13 +155,13 @@ def run(dry=False, client=vci, now=None):
     top, per = [], {}
     for _, r in ok.iterrows():
         sec = industries.get(r["symbol"], {}).get("sector", "Khác")
-        if per.get(sec, 0) >= config.MAX_PER_SECTOR:
+        if per.get(sec, 0) >= MAX_SECTOR_V2:
             continue
         r = r.to_dict()
         r["sector"] = sec
         top.append(r)
         per[sec] = per.get(sec, 0) + 1
-        if len(top) >= config.TOP_N:
+        if len(top) >= TOP_N_V2:
             break
 
     breadth = sum(1 for r in rows if r["f"]["price"] > r["f"]["ma50"]) / len(rows) * 100
@@ -268,7 +270,7 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
          f"🔎 Quét {n_all:,} mã → {n_liq} mã GTGD ≥3 tỷ → {n_ok} mã đủ dữ liệu tài chính",
          "📐 Chọn theo: Biên LN + ROE + P/B + Giá ít biến động + Xu hướng rõ"]
     if top:
-        L += ["", "🏆 <b>TOP 5:</b> " + " · ".join(f"{x['symbol']}{'✅' if x['action'] == 'MUA' else '⏳'}" for x in top)]
+        L += ["", f"🏆 <b>TOP {len(top)}:</b> " + " · ".join(f"{x['symbol']}{'✅' if x['action'] == 'MUA' else '⏳'}" for x in top)]
         if prio:
             L.append(f"⭐ <b>ƯU TIÊN #1: {prio['symbol']}</b> – mua {prio['zone_low']:,.2f}–{prio['zone_high']:,.2f}, "
                      f"lướt sóng chốt " + " / ".join(f"{prio['now_price'] * (1 + m / 100):,.2f}" for m, *_ in prio['luot']['levels'])
@@ -280,7 +282,15 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
     header = "\n".join(L)
 
     blocks = []
+    waits = []
     for i, x in enumerate(top, 1):
+        if x["action"] != "MUA":
+            f = x["f"]
+            trig = max(f["ma50"], x["now_price"])
+            waits.append(f"#{i} <b>{x['symbol']}</b> ({x['score']:.0f}đ) giá {x['now_price']:,.2f} → mua khi đóng cửa trên "
+                         f"<b>{trig:,.2f}</b>" + ("" if f["rsi"] >= 50 else " và RSI vượt 50")
+                         + f" | ROE {x['roe']:.0f}% · Biên LN {x['margin']:.0f}%")
+            continue
         f = x["f"]
         p = x["now_price"]
         chg = (p / x["prev_close"] - 1) * 100 if x["prev_close"] else None
@@ -318,11 +328,10 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
         if x["cons"]:
             b.append("👎 " + "; ".join(x["cons"]))
         blocks.append("\n".join(b))
-    blocks.append("━━━━━━━━━━━━━━\n"
-                  "📌 <b>Cách dùng V2:</b> chỉ mua mã ✅, chia 2 lần trong vùng mua. Chọn 1 kiểu: ⚡ lướt sóng hoặc 📦 nắm giữ, "
-                  "đặt sẵn lệnh bán ở từng mốc. Chạm Mốc 1 thì dời cắt lỗ lên giá vốn. Nhớ T+2.5. Mã ⏳ chỉ theo dõi.\n"
-                  "📊 Tỷ lệ chạm mốc tính từ backtest các lệnh ✅ 2023–nay, đã tính T+2.5. Lãi thực = mốc − ~0.4% phí.\n"
-                  "<i>Bot tham khảo, không phải khuyến nghị đầu tư.</i>")
+    if not any(x["action"] == "MUA" for x in top):
+        blocks.insert(0, "━━━━━━━━━━━━━━\n⚠️ Hôm nay chưa có mã nào ✅ – kiên nhẫn chờ, không mua.")
+    if waits:
+        blocks.append("━━━━━━━━━━━━━━\n⏳ <b>ĐANG CHỜ</b> (doanh nghiệp tốt nhưng giá còn yếu – chưa mua):\n" + "\n".join(waits))
     return report.split_messages(header, blocks)
 
 
