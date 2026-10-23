@@ -13,7 +13,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -25,12 +25,21 @@ jobs:
       - name: Cai thu vien
         run: pip install -r requirements.txt
 
-      - name: Chay bot
+      - name: Chay bot V1
+        continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TZ: Asia/Ho_Chi_Minh
         run: python main.py
+
+      - name: Chay bot V2
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TZ: Asia/Ho_Chi_Minh
+        run: python main_v2.py
 
       - name: Luu nhat ky
         if: always()
@@ -38,5 +47,6 @@ jobs:
           git config user.name "claude-top5-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/ || true
-          git diff --cached --quiet || git commit -m "Cap nhat nhat ky TOP5"
+          git diff --cached --quiet || git commit -m "Cap nhat nhat ky TOP5 V1 + V2"
+          git pull --rebase || true
           git push || echo "Khong push duoc"
