@@ -116,11 +116,18 @@ def run(dry=False, client=vci, now=None):
         if len(top) >= config.TOP_N:
             break
 
+    breadth = sum(1 for r in rows if r["f"]["price"] > r["f"]["ma50"]) / len(rows) * 100
+    market = an.market_regime(idx_df, breadth)
+    for x in top:
+        x.update(advise(x, market))
+    buy = [x for x in top if x["action"] == "MUA"]
+    prio = max(buy, key=lambda x: x["score"]) if buy else None
+
     # ---- Hiệu quả thật: V2 và V1 (cùng thước đo) ----
     perf2 = tracker.evaluate(price_map, idx_df, (5, 20), path=LOG_V2) if session == "CHIEU" else []
     perf1 = tracker.evaluate(price_map, idx_df, (5, 20), path=LOG_V1) if session == "CHIEU" else []
 
-    msgs = build(label, now, note, len(symbols_df), len(rows), len(ok), top, perf1, perf2)
+    msgs = build(label, now, note, len(symbols_df), len(rows), len(ok), top, perf1, perf2, market, prio)
     if dry:
         for m in msgs:
             print(m)
@@ -130,16 +137,70 @@ def run(dry=False, client=vci, now=None):
     if top:
         tracker.log_picks([
             [idx_last.strftime("%Y-%m-%d"), session, i, x["symbol"], round(x["f"]["price"], 2),
-             round(x["now_price"], 2), round(stop_of(x), 2), None, "GIU20", int(i == 1), round(x["score"], 1)]
+             round(x["now_price"], 2), round(x["stop"], 2), round(x["t1"], 2), x["action"],
+             int(prio is not None and x["symbol"] == prio["symbol"]), round(x["score"], 1)]
             for i, x in enumerate(top, 1)
         ], path=LOG_V2)
     return top
 
 
-def stop_of(x):
-    """Cắt lỗ thảm hoạ (chưa backtest): 3 ATR dưới giá, không xa quá 12%."""
-    p, atr = x["now_price"], x["f"]["atr"]
-    return max(p - 3 * atr, p * 0.88)
+def advise(x, market):
+    """
+    Lời khuyên & vùng giá cho từng mã.
+    Điều kiện MUA (kiểm tra trên dữ liệu: alpha 20 phiên cao hơn ~2% ở cả 2023-2025 và 2026):
+        giá > MA50  và  RSI14 >= 50   (DN tốt + giá đang khoẻ)
+    Ngược lại -> CHỜ (DN tốt nhưng giá đang yếu, mua sớm thường bị kẹp).
+    Chốt lời/cắt lỗ dựa trên phân bố lợi nhuận 20 phiên của nhóm MUA trong backtest:
+        25% tốt nhất lãi >= +4.7%, 10% tốt nhất >= +12%; 10% tệ nhất lỗ <= -7.7%.
+    """
+    f = x["f"]
+    p, atr, ma20, ma50, rsi = x["now_price"], f["atr"], f["ma20"], f["ma50"], f["rsi"]
+    above50 = p > ma50
+    strong = rsi >= 50
+    action = "MUA" if above50 and strong else "CHO"
+
+    z_low = max(p - atr, ma50 if above50 else p - atr)
+    z_high = p * 1.01
+    stop_pct = min(max(2.5 * atr / p, 0.05), 0.08)          # 5%–8%
+    stop = min(p * (1 - stop_pct), ma50 * 0.98) if above50 else p * (1 - stop_pct)
+    stop = max(stop, p * 0.92)
+    t1, t2 = p * 1.05, p * 1.12
+
+    pros, cons = [], []
+    if x["margin"] is not None and x["margin"] >= 20:
+        pros.append(f"biên lợi nhuận rất cao {x['margin']:.0f}%")
+    if x["roe"] is not None and x["roe"] >= 20:
+        pros.append(f"ROE cao {x['roe']:.0f}%")
+    if x["atr_pct"] <= 0.015:
+        pros.append("giá rất ổn định, ít giật")
+    if x["adx"] >= 30 and f["pdi"] > f["mdi"]:
+        pros.append("xu hướng tăng rõ")
+    if x.get("pe") and 0 < x["pe"] <= 10:
+        pros.append(f"định giá rẻ (P/E {x['pe']:.1f})")
+    if not above50:
+        cons.append(f"giá dưới MA50 ({ma50:,.2f}) – xu hướng trung hạn đang yếu")
+    if not strong:
+        cons.append(f"RSI {rsi:.0f} < 50 – lực mua chưa quay lại")
+    if f["pdi"] < f["mdi"] and x["adx"] >= 25:
+        cons.append("ADX cao nhưng là xu hướng GIẢM")
+    if x.get("pe") and x["pe"] > 25:
+        cons.append(f"P/E cao ({x['pe']:.1f})")
+    if rsi > 78:
+        cons.append(f"RSI {rsi:.0f} rất cao – chia 2 lần mua")
+
+    if action == "MUA":
+        advice = "✅ <b>NÊN MUA</b> – doanh nghiệp tốt, giá đang khoẻ"
+        if market["points"] <= 1:
+            advice += " (thị trường xấu: chỉ mua ≤ 1/3 tỷ trọng dự định)"
+    else:
+        need = []
+        if not above50:
+            need.append(f"đóng cửa trên {ma50:,.2f} (MA50)")
+        if not strong:
+            need.append("RSI vượt 50")
+        advice = "⏳ <b>CHỜ</b> – doanh nghiệp tốt nhưng giá đang yếu. Chỉ mua khi " + " và ".join(need)
+    return {"action": action, "advice": advice, "zone_low": z_low, "zone_high": z_high,
+            "stop": stop, "t1": t1, "t2": t2, "pros": pros[:3], "cons": cons[:3]}
 
 
 def _pct(v):
@@ -154,15 +215,24 @@ def _perf_lines(name, perf):
     return out
 
 
-def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2):
+def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio):
+    m = market
     L = [f"💎 <b>CLAUDE BOT V2 – CỔ PHIẾU CHẤT LƯỢNG</b> – {label}",
          f"🕐 {now:%H:%M %d/%m/%Y} | {note}",
          "",
+         f"📊 <b>THỊ TRƯỜNG: {m['regime']}</b> – VN-Index {m['price']:,.2f} ({_pct(m['ret20'])} 20 phiên), "
+         f"{m['breadth']:.0f}% mã trên MA50",
+         f"• Tỷ trọng gợi ý: {m['exposure']}",
+         "",
          f"🔎 Quét {n_all:,} mã → {n_liq} mã GTGD ≥3 tỷ → {n_ok} mã đủ dữ liệu tài chính",
-         "📐 Điểm = Biên LN + ROE + P/B + Ít biến động + Xu hướng rõ (xếp hạng toàn rổ)",
-         "🗓 Cách dùng: mua quanh giá hiện tại, <b>giữ khoảng 20 phiên</b> rồi xem lại. Không lướt sóng."]
+         "📐 Chọn theo: Biên LN + ROE + P/B + Giá ít biến động + Xu hướng rõ"]
     if top:
-        L += ["", "🏆 <b>TOP 5:</b> " + " · ".join(x["symbol"] for x in top)]
+        L += ["", "🏆 <b>TOP 5:</b> " + " · ".join(f"{x['symbol']}{'✅' if x['action'] == 'MUA' else '⏳'}" for x in top)]
+        if prio:
+            L.append(f"⭐ <b>ƯU TIÊN #1: {prio['symbol']}</b> – mua {prio['zone_low']:,.2f}–{prio['zone_high']:,.2f}, "
+                     f"chốt lời {prio['t1']:,.2f} / {prio['t2']:,.2f}, cắt lỗ {prio['stop']:,.2f}")
+        else:
+            L.append("⭐ <b>ƯU TIÊN #1: CHƯA CÓ</b> – cả 5 mã đều đang yếu về giá, kiên nhẫn chờ")
     if perf1 or perf2:
         L += ["", "📒 <b>So sánh hiệu quả thật V1 vs V2</b>"] + _perf_lines("V2", perf2) + _perf_lines("V1", perf1)
     header = "\n".join(L)
@@ -170,22 +240,31 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2):
     blocks = []
     for i, x in enumerate(top, 1):
         f = x["f"]
-        price = x["now_price"]
-        chg = (price / x["prev_close"] - 1) * 100 if x["prev_close"] else None
+        p = x["now_price"]
+        chg = (p / x["prev_close"] - 1) * 100 if x["prev_close"] else None
+        star = " ⭐" if prio and x["symbol"] == prio["symbol"] else ""
         b = ["━━━━━━━━━━━━━━",
-             f"<b>#{i} {x['symbol']}</b> · {meta_ex(x)} · {html.escape(x['sector'])}",
-             f"Điểm V2 <b>{x['score']:.0f}</b>/100",
-             f"💰 Giá: <b>{price:,.2f}</b> ({_pct(chg)})",
-             f"🟢 Vùng mua: <b>{price * 0.98:,.2f} – {price * 1.01:,.2f}</b> (quanh giá hiện tại, không đuổi quá +1%)",
-             f"🎯 Kế hoạch bán: sau ~{HOLD_DAYS} phiên đánh giá lại; giữ tiếp nếu vẫn nằm trong TOP5",
-             f"🛑 Cắt lỗ khẩn cấp: <b>{stop_of(x):,.2f}</b> (−{(1 - stop_of(x) / price) * 100:.1f}%, chưa backtest – chỉ để phòng sập mạnh)",
-             f"🏢 Biên LN {x['margin']:.1f}% · ROE {x['roe']:.1f}% · P/B {x['pb']:.1f}"
+             f"<b>#{i} {x['symbol']}</b>{star} · {meta_ex(x)} · {html.escape(x['sector'])} · Điểm {x['score']:.0f}/100",
+             f"💰 Giá: <b>{p:,.2f}</b> ({_pct(chg)})",
+             x["advice"],
+             f"🟢 Vùng mua: <b>{x['zone_low']:,.2f} – {x['zone_high']:,.2f}</b>",
+             f"🎯 Chốt lời: <b>{x['t1']:,.2f}</b> (+5%, bán 1/2) → <b>{x['t2']:,.2f}</b> (+12%) – hoặc hết 20 phiên",
+             f"🛑 Cắt lỗ: <b>{x['stop']:,.2f}</b> (−{(1 - x['stop'] / p) * 100:.1f}%) – đóng cửa dưới mức này thì bán",
+             f"🏢 TC: Biên LN {x['margin']:.1f}% · ROE {x['roe']:.1f}% · P/B {x['pb']:.1f}"
              + (f" · P/E {x['pe']:.1f}" if x.get("pe") else ""),
-             f"📈 Biến động {x['atr_pct'] * 100:.1f}%/phiên · ADX {x['adx']:.0f} · RSI {f['rsi']:.0f} · GTGD {f['value20'] / 1e9:,.1f} tỷ/phiên"]
+             f"📈 KT: RSI {f['rsi']:.0f} · ADX {x['adx']:.0f} · MA50 {f['ma50']:,.2f} · "
+             f"biến động {x['atr_pct'] * 100:.1f}%/phiên · GTGD {f['value20'] / 1e9:,.1f} tỷ"]
+        if x["pros"]:
+            b.append("👍 " + "; ".join(x["pros"]))
+        if x["cons"]:
+            b.append("👎 " + "; ".join(x["cons"]))
         blocks.append("\n".join(b))
     blocks.append("━━━━━━━━━━━━━━\n"
-                  "📊 Backtest 2026 (chưa từng nhìn khi thiết kế): V2 ngang VN-Index, hơn TB mã thanh khoản ~1.4%/20 phiên. "
-                  "V1 kém VN-Index ~1%.\n<i>Bot tham khảo, không phải khuyến nghị đầu tư.</i>")
+                  "📌 <b>Cách dùng V2:</b> chỉ mua mã ✅, chia 2 lần trong vùng mua. Tới +5% bán 1/2 và dời cắt lỗ về giá vốn; "
+                  "phần còn lại giữ tới +12% hoặc hết ~20 phiên. Mã ⏳ chỉ theo dõi.\n"
+                  "📊 Backtest: TOP5 V2 ngang VN-Index; lọc thêm 'giá > MA50 & RSI ≥ 50' giúp hơn ~2%/20 phiên ở cả 2023-25 và 2026. "
+                  "Mức chốt lời/cắt lỗ lấy từ phân bố lãi lỗ lịch sử, chưa mô phỏng theo từng phiên.\n"
+                  "<i>Bot tham khảo, không phải khuyến nghị đầu tư.</i>")
     return report.split_messages(header, blocks)
 
 
