@@ -239,12 +239,7 @@ def advise(x, market):
         if market["points"] <= 1:
             advice += " (thị trường xấu: chỉ mua ≤ 1/3 tỷ trọng dự định)"
     else:
-        need = []
-        if not above50:
-            need.append(f"đóng cửa trên {ma50:,.2f} (MA50)")
-        if not strong:
-            need.append("RSI vượt 50")
-        advice = "⏳ <b>CHỜ</b> – doanh nghiệp tốt nhưng giá đang yếu. Chỉ mua khi " + " và ".join(need)
+        advice = "⏳ <b>CHỜ</b> – doanh nghiệp tốt nhưng giá đang yếu, chưa nên mua"
     return {"action": action, "advice": advice, "zone_low": z_low, "zone_high": z_high,
             "stop": stop, "t1": t1, "t2": t2, "luot": luot, "giu": giu, "pros": pros[:3], "cons": cons[:3]}
 
@@ -294,9 +289,16 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
              f"<b>#{i} {x['symbol']}</b>{star} · {meta_ex(x)} · {html.escape(x['sector'])} · Điểm {x['score']:.0f}/100",
              f"💰 Giá: <b>{p:,.2f}</b> ({_pct(chg)})",
              x["advice"],
-             f"🟢 Vùng mua: <b>{x['zone_low']:,.2f} – {x['zone_high']:,.2f}</b>",
         ]
+        if x["action"] != "MUA":
+            ma50 = f["ma50"]
+            b.append(f"🔔 Điểm mua: khi giá đóng cửa trên <b>{max(ma50, p):,.2f}</b>"
+                     + ("" if f["rsi"] >= 50 else " và RSI vượt 50") + " – lúc đó bot sẽ chuyển ✅ và báo mốc chốt lời/cắt lỗ")
         for key, title in (("luot", "⚡ <b>LƯỚT SÓNG</b>"), ("giu", "📦 <b>NẮM GIỮ</b>")):
+            if x["action"] != "MUA":
+                break
+            if key == "luot":
+                b.append(f"🟢 Vùng mua: <b>{x['zone_low']:,.2f} – {x['zone_high']:,.2f}</b>")
             pl = x[key]
             b.append(f"{title} (tối đa {pl['horizon']} phiên, cắt lỗ −{pl['stop'] * 100:.0f}% = {p * (1 - pl['stop']):,.2f}):")
             n = len(pl["levels"])
