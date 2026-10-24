@@ -4,6 +4,7 @@ Gọi trực tiếp bằng requests để:
   - tải giá của 40 mã trong 1 lần gọi (nhanh, ít bị chặn)
   - không phụ thuộc phiên bản vnstock thay đổi liên tục
 """
+import json
 import logging
 import os
 import pickle
@@ -60,29 +61,62 @@ def _request(method, url, retries=2, timeout=(10, 20), **kwargs):
 # ----------------------------------------------------------------------------
 # Danh sách mã & ngành
 # ----------------------------------------------------------------------------
+SYMBOLS_FILE = os.path.join(config.DATA_DIR, "symbols.json")
+INDUSTRIES_FILE = os.path.join(config.DATA_DIR, "industries.json")
+
+
+def _save_json(path, obj):
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(obj, fh, ensure_ascii=False)
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def _load_json(path):
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def get_all_symbols():
-    """Trả về DataFrame: symbol, exchange (HSX/HNX/UPCOM)."""
-    data = _request("GET", f"{TRADING_URL}/price/symbols/getAll")
-    df = pd.DataFrame(data)
-    df = df.rename(columns={"board": "exchange"})
-    if "type" in df.columns:
-        df = df[df["type"].astype(str).str.upper() == "STOCK"]
-    df = df[df["symbol"].astype(str).str.len() == 3]
-    df["exchange"] = df["exchange"].astype(str).str.upper().replace({"HOSE": "HSX"})
-    df = df[df["exchange"].isin(["HSX", "HNX", "UPCOM"])]
-    name_col = "organName" if "organName" in df.columns else None
-    df["name"] = df[name_col] if name_col else ""
-    return df[["symbol", "exchange", "name"]].drop_duplicates("symbol").reset_index(drop=True)
+    """Trả về DataFrame: symbol, exchange (HSX/HNX/UPCOM).
+    Lấy từ Vietcap; nếu Vietcap lỗi thì dùng bản đã lưu lần trước (data/symbols.json)."""
+    try:
+        data = _request("GET", f"{TRADING_URL}/price/symbols/getAll", timeout=(8, 15))
+        df = pd.DataFrame(data)
+        df = df.rename(columns={"board": "exchange"})
+        if "type" in df.columns:
+            df = df[df["type"].astype(str).str.upper() == "STOCK"]
+        df = df[df["symbol"].astype(str).str.len() == 3]
+        df["exchange"] = df["exchange"].astype(str).str.upper().replace({"HOSE": "HSX"})
+        df = df[df["exchange"].isin(["HSX", "HNX", "UPCOM"])]
+        name_col = "organName" if "organName" in df.columns else None
+        df["name"] = df[name_col] if name_col else ""
+        df = df[["symbol", "exchange", "name"]].drop_duplicates("symbol").reset_index(drop=True)
+        if len(df) > 500:
+            _save_json(SYMBOLS_FILE, df.to_dict("records"))
+        return df
+    except Exception as e:  # noqa: BLE001
+        saved = _load_json(SYMBOLS_FILE)
+        if saved:
+            log.warning("Vietcap lỗi danh sách mã (%s) -> dùng bản đã lưu (%d mã)", str(e)[:80], len(saved))
+            return pd.DataFrame(saved)
+        raise
 
 
 def get_industries():
     """
     Trả về dict: symbol -> {"sector": tên ngành cấp 2, "com_type": NH/CK/BH/CT}
     NH = ngân hàng, CK = chứng khoán, BH = bảo hiểm, CT = công ty thường.
+    Vietcap lỗi thì dùng bản đã lưu (data/industries.json) – phân ngành gần như không đổi.
     """
     out = {}
     try:
-        data = _request("GET", f"{IQ_URL}/v2/company/search-bar", params={"language": 1})
+        data = _request("GET", f"{IQ_URL}/v2/company/search-bar", params={"language": 1}, timeout=(8, 15))
         for c in data.get("data") or []:
             sym = c.get("code")
             if not sym:
@@ -95,7 +129,14 @@ def get_industries():
                 "name": c.get("name") or "",
             }
     except Exception as e:  # noqa: BLE001
-        log.warning("Không lấy được phân ngành: %s", e)
+        log.warning("Không lấy được phân ngành từ Vietcap: %s", str(e)[:80])
+    if len(out) > 500:
+        _save_json(INDUSTRIES_FILE, out)
+        return out
+    saved = _load_json(INDUSTRIES_FILE)
+    if saved:
+        log.warning("Dùng phân ngành đã lưu (%d mã)", len(saved))
+        return saved
     return out
 
 
