@@ -1,4 +1,4 @@
-KIỂM TRA TOÀN DIỆN BOT V1 + V2 – 14:19 24/10/2026
+KIỂM TRA TOÀN DIỆN BOT V1 + V2 – 14:51 24/10/2026
 
 ======================================================================
 1. DỮ LIỆU GIÁ – QUÉT TOÀN THỊ TRƯỜNG
@@ -14,11 +14,29 @@ Danh sách thanh khoản đang lưu (ngày 2026-10-22): 243 mã
 ======================================================================
 2. ĐỐI CHIẾU GIÁ VIETCAP vs KBS (mẫu 25 mã thanh khoản lớn)
 ======================================================================
-So được 15 mã. Chênh lệch giá đóng cửa lớn nhất (20 phiên): NVL 0.25%, HDB 0.06%, VIC 0.00%, TCB 0.00%, VHM 0.00%
+So được 15 mã. Chênh lệch giá đóng cửa lớn nhất (20 phiên): NVL 0.25%, HDB 0.06%, VHM 0.00%, SHB 0.00%, MSN 0.00%
 Cùng ngày giao dịch mới nhất: 15/15
 ➜ ✅ Hai nguồn khớp nhau (chênh < 0.5%)
-Không so được: MBB(VCI lỗi), CTG(VCI lỗi), MWG(VCI lỗi), PVT(VCI lỗi), ACB(VCI lỗi), VCB(VCI lỗi), GEX(VCI lỗi), MSB(VCI lỗi), VCI(VCI lỗi), TPB(VCI lỗi)
+Không so được: VIC(VCI lỗi), TCB(VCI lỗi), MWG(VCI lỗi), PVT(VCI lỗi), ACB(VCI lỗi), VCB(VCI lỗi), GEX(VCI lỗi), MSB(VCI lỗi), VCI(VCI lỗi), TPB(VCI lỗi)
 
 ======================================================================
 3. BOT V1 – KIỂM TRA ĐIỀU KIỆN & MÃ BỊ SÓT
 ======================================================================
+
+❌ LỖI KHI KIỂM TRA:
+Traceback (most recent call last):
+  File "/home/runner/work/Top-5-Co-Phieu-Hang-Ngay-Claude/Top-5-Co-Phieu-Hang-Ngay-Claude/audit.py", line 210, in <module>
+    main()
+  File "/home/runner/work/Top-5-Co-Phieu-Hang-Ngay-Claude/Top-5-Co-Phieu-Hang-Ngay-Claude/audit.py", line 125, in main
+    ctx = m1.run(dry=True, now=now)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Top-5-Co-Phieu-Hang-Ngay-Claude/Top-5-Co-Phieu-Hang-Ngay-Claude/main.py", line 91, in run
+    symbols_df = client.get_all_symbols()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Top-5-Co-Phieu-Hang-Ngay-Claude/Top-5-Co-Phieu-Hang-Ngay-Claude/vci_client.py", line 65, in get_all_symbols
+    data = _request("GET", f"{TRADING_URL}/price/symbols/getAll")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Top-5-Co-Phieu-Hang-Ngay-Claude/Top-5-Co-Phieu-Hang-Ngay-Claude/vci_client.py", line 57, in _request
+    raise RuntimeError(f"Gọi API thất bại: {url} -> {last_err}")
+RuntimeError: Gọi API thất bại: https://trading.vietcap.com.vn/api/price/symbols/getAll -> HTTPSConnectionPool(host='trading.vietcap.com.vn', port=443): Read timed out. (read timeout=20)
+
