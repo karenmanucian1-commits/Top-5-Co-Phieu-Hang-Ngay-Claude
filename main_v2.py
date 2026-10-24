@@ -34,7 +34,8 @@ from main import get_ratios_cached, load_cache, load_universe, save_cache
 VN_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 LOG_V2 = os.path.join(config.DATA_DIR, "picks_log_v2.csv")
 LOG_V1 = os.path.join(config.DATA_DIR, "picks_log.csv")
-TOP_N_V2 = 10        # backtest: mã ✅ hạng 6-10 (thậm chí tới 20) hiệu quả ngang hạng 1-5
+SCORE_RANK_LIMIT = 30   # chỉ xét mã nằm trong top 30 điểm V2
+MAX_BUY = 10            # tối đa 10 mã nên mua mỗi lần
 MAX_SECTOR_V2 = 3
 HOLD_DAYS = 20
 PROBS_PATH = os.path.join(config.DATA_DIR, "target_probs.json")
@@ -152,23 +153,26 @@ def run(dry=False, client=vci, now=None):
     ok["score"] = ok[[f"r_{k}" for k, _ in FACTORS]].mean(axis=1) * 100
     ok = ok.sort_values("score", ascending=False)
 
+    breadth = sum(1 for r in rows if r["f"]["price"] > r["f"]["ma50"]) / len(rows) * 100
+    market = an.market_regime(idx_df, breadth)
+
+    # Chỉ lấy mã ✅ NÊN MUA trong nhóm điểm cao (backtest: mã ✅ trong top ~30 điểm đều hiệu quả,
+    # ngoài top 50 kém hẳn). Tối đa MAX_BUY mã, tối đa MAX_SECTOR_V2 mã/ngành.
     top, per = [], {}
-    for _, r in ok.iterrows():
+    for rank, (_, r) in enumerate(ok.iterrows(), 1):
+        if rank > SCORE_RANK_LIMIT or len(top) >= MAX_BUY:
+            break
+        r = r.to_dict()
+        r.update(advise(r, market))
+        if r["action"] != "MUA":
+            continue
         sec = industries.get(r["symbol"], {}).get("sector", "Khác")
         if per.get(sec, 0) >= MAX_SECTOR_V2:
             continue
-        r = r.to_dict()
-        r["sector"] = sec
+        r["sector"], r["rank"] = sec, rank
         top.append(r)
         per[sec] = per.get(sec, 0) + 1
-        if len(top) >= TOP_N_V2:
-            break
-
-    breadth = sum(1 for r in rows if r["f"]["price"] > r["f"]["ma50"]) / len(rows) * 100
-    market = an.market_regime(idx_df, breadth)
-    for x in top:
-        x.update(advise(x, market))
-    buy = [x for x in top if x["action"] == "MUA"]
+    buy = top
     prio = max(buy, key=lambda x: x["score"]) if buy else None
 
     # ---- Hiệu quả thật: V2 và V1 (cùng thước đo) ----
@@ -270,7 +274,7 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
          f"🔎 Quét {n_all:,} mã → {n_liq} mã GTGD ≥3 tỷ → {n_ok} mã đủ dữ liệu tài chính",
          "📐 Chọn theo: Biên LN + ROE + P/B + Giá ít biến động + Xu hướng rõ"]
     if top:
-        L += ["", f"🏆 <b>TOP {len(top)}:</b> " + " · ".join(f"{x['symbol']}{'✅' if x['action'] == 'MUA' else '⏳'}" for x in top)]
+        L += ["", f"✅ <b>CỔ PHIẾU NÊN MUA ({len(top)} mã):</b> " + " · ".join(x['symbol'] for x in top)]
         if prio:
             L.append(f"⭐ <b>ƯU TIÊN #1: {prio['symbol']}</b> – mua {prio['zone_low']:,.2f}–{prio['zone_high']:,.2f}, "
                      f"lướt sóng chốt " + " / ".join(f"{prio['now_price'] * (1 + m / 100):,.2f}" for m, *_ in prio['luot']['levels'])
@@ -282,15 +286,7 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
     header = "\n".join(L)
 
     blocks = []
-    waits = []
     for i, x in enumerate(top, 1):
-        if x["action"] != "MUA":
-            f = x["f"]
-            trig = max(f["ma50"], x["now_price"])
-            waits.append(f"#{i} <b>{x['symbol']}</b> ({x['score']:.0f}đ) giá {x['now_price']:,.2f} → mua khi đóng cửa trên "
-                         f"<b>{trig:,.2f}</b>" + ("" if f["rsi"] >= 50 else " và RSI vượt 50")
-                         + f" | ROE {x['roe']:.0f}% · Biên LN {x['margin']:.0f}%")
-            continue
         f = x["f"]
         p = x["now_price"]
         chg = (p / x["prev_close"] - 1) * 100 if x["prev_close"] else None
@@ -328,10 +324,8 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
         if x["cons"]:
             b.append("👎 " + "; ".join(x["cons"]))
         blocks.append("\n".join(b))
-    if not any(x["action"] == "MUA" for x in top):
-        blocks.insert(0, "━━━━━━━━━━━━━━\n⚠️ Hôm nay chưa có mã nào ✅ – kiên nhẫn chờ, không mua.")
-    if waits:
-        blocks.append("━━━━━━━━━━━━━━\n⏳ <b>ĐANG CHỜ</b> (doanh nghiệp tốt nhưng giá còn yếu – chưa mua):\n" + "\n".join(waits))
+    if not top:
+        blocks.append("━━━━━━━━━━━━━━\n⚠️ Hôm nay không có cổ phiếu nào đủ điều kiện mua – đứng ngoài, giữ tiền.")
     return report.split_messages(header, blocks)
 
 
