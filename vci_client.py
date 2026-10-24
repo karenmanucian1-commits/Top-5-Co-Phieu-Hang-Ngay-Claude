@@ -35,11 +35,11 @@ _session = requests.Session()
 _session.headers.update(HEADERS)
 
 
-def _request(method, url, retries=3, **kwargs):
+def _request(method, url, retries=2, **kwargs):
     last_err = None
     for attempt in range(retries):
         try:
-            r = _session.request(method, url, timeout=30, **kwargs)
+            r = _session.request(method, url, timeout=(10, 20), **kwargs)
             if r.status_code == 429:
                 wait = 10 * (attempt + 1)
                 log.warning("Bị giới hạn tốc độ (429), chờ %ss", wait)
@@ -166,22 +166,32 @@ def _fetch_ohlc_batch(symbols, bars):
     return result
 
 
-def get_ohlc(symbols, bars=None):
-    """Tải giá ngày từng mã (API chỉ trả dữ liệu khi hỏi 1 mã/lần). Trả về dict symbol -> DataFrame."""
+def get_ohlc(symbols, bars=None, max_minutes=15):
+    """Tải giá ngày từng mã (API chỉ trả dữ liệu khi hỏi 1 mã/lần). Trả về dict symbol -> DataFrame.
+    Dừng sớm (báo lỗi) nếu nguồn dữ liệu không phản hồi, thay vì treo hàng giờ."""
     bars = bars or config.HISTORY_BARS
-    out, fails = {}, 0
+    out, fails, streak = {}, 0, 0
     symbols = list(symbols)
+    t0 = time.time()
     for i, s in enumerate(symbols, 1):
         try:
-            out.update(_fetch_ohlc_batch([s], bars))
+            got = _fetch_ohlc_batch([s], bars)
+            out.update(got)
+            streak = 0 if got else streak + 1
         except Exception as e:  # noqa: BLE001
             fails += 1
-            log.debug("Lỗi tải %s: %s", s, e)
+            streak += 1
+            log.warning("Lỗi tải %s: %s", s, str(e)[:150])
         time.sleep(config.PRICE_SLEEP)
-        if i % 200 == 0 or i == len(symbols):
-            log.info("Đã tải giá %d/%d mã (có dữ liệu: %d, lỗi: %d)", i, len(symbols), len(out), fails)
-        if i == 30 and not out:
-            raise RuntimeError(f"30 mã đầu không tải được giá. Phản hồi API: {_last_raw['sample']}")
+        if i % 50 == 0 or i == len(symbols):
+            log.info("Đã tải giá %d/%d mã (có dữ liệu: %d, lỗi: %d, %.0fs)", i, len(symbols), len(out), fails,
+                     time.time() - t0)
+        if streak >= 10:
+            raise RuntimeError(f"Nguồn dữ liệu Vietcap không phản hồi ({streak} mã liên tiếp lỗi). "
+                               f"Có thể đang bảo trì – thử lại sau.")
+        if time.time() - t0 > max_minutes * 60:
+            raise RuntimeError(f"Tải giá quá {max_minutes} phút (mới được {i}/{len(symbols)} mã) – "
+                               f"nguồn dữ liệu đang chậm, thử lại sau.")
     return out
 
 
