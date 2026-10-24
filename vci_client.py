@@ -12,6 +12,7 @@ import time
 
 import pandas as pd
 import requests
+from datetime import datetime, timedelta
 
 import config
 
@@ -170,6 +171,81 @@ def _fetch_ohlc_batch(symbols, bars, fast=False):
     return result
 
 
+# ----------------------------------------------------------------------------
+# Nguồn dự phòng: KBS (KB Securities) – dùng khi Vietcap chậm / không phản hồi
+# ----------------------------------------------------------------------------
+KBS_URL = "https://kbbuddywts.kbsec.com.vn/iis-server/investment"
+_kbs = requests.Session()
+_kbs.headers.update({k: v for k, v in HEADERS.items() if k not in ("Referer", "Origin")})
+_kbs.headers.update({"Referer": "https://kbbuddy.kbsec.com.vn/", "Origin": "https://kbbuddy.kbsec.com.vn"})
+
+
+def _fetch_kbs(symbol, bars):
+    days = int(bars * 1.6) + 10
+    end = datetime.now()
+    start = end - timedelta(days=days)
+    kind = "index" if symbol in INDEX_SYMBOLS else "stocks"
+    r = _kbs.get(f"{KBS_URL}/{kind}/{symbol}/data_day",
+                 params={"sdate": start.strftime("%d-%m-%Y"), "edate": end.strftime("%d-%m-%Y")},
+                 timeout=(8, 15))
+    r.raise_for_status()
+    js = r.json()
+    rows = js.get("data_day") if isinstance(js, dict) else None
+    if not rows:
+        return {}
+    df = pd.DataFrame(rows).rename(columns={"t": "date", "o": "open", "h": "high", "l": "low",
+                                            "c": "close", "v": "volume"})
+    df["date"] = pd.to_datetime(df["date"], errors="coerce").dt.tz_localize(None).dt.normalize()
+    for col in ["open", "high", "low", "close", "volume"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")
+    if symbol not in INDEX_SYMBOLS:
+        df[["open", "high", "low", "close"]] = df[["open", "high", "low", "close"]] / 1000.0
+    df = df.dropna(subset=["date", "close"]).drop_duplicates("date", keep="last")
+    df = df[["date", "open", "high", "low", "close", "volume"]].sort_values("date").tail(bars).reset_index(drop=True)
+    return {symbol: df} if len(df) else {}
+
+
+SOURCE = None    # nguồn dùng cho CẢ lượt chạy: "VCI" (Vietcap) hoặc "KBS"
+SOURCE_NAME = {"VCI": "Vietcap", "KBS": "KBS"}
+PROBE = ["VNINDEX", "FPT", "VCB", "HPG", "MWG"]
+
+
+def _fetch_src(src, symbol, bars, fast=True):
+    if src == "KBS":
+        return _fetch_kbs(symbol, bars)
+    return _fetch_ohlc_batch([symbol], bars, fast=fast)
+
+
+def _probe(src, bars):
+    ok = 0
+    for sym in PROBE:
+        try:
+            if _fetch_src(src, sym, min(bars, 30)):
+                ok += 1
+        except Exception:  # noqa: BLE001
+            pass
+    return ok
+
+
+def choose_source(bars):
+    """Chọn 1 nguồn cho cả lượt chạy: Vietcap trước, không ổn thì KBS."""
+    global SOURCE
+    if SOURCE:
+        return SOURCE
+    n = _probe("VCI", bars)
+    if n >= 4:
+        SOURCE = "VCI"
+    else:
+        k = _probe("KBS", bars)
+        log.warning("Vietcap chỉ trả lời %d/%d mã thử, KBS %d/%d", n, len(PROBE), k, len(PROBE))
+        if k < 3 and n < 3:
+            raise RuntimeError("Cả Vietcap và KBS đều không phản hồi – thử lại sau.")
+        SOURCE = "KBS" if k >= n else "VCI"
+    log.info("Nguồn dữ liệu giá cho lượt chạy này: %s", SOURCE_NAME[SOURCE])
+    return SOURCE
+
+
+MISSING = []   # mã không tải được ở lần gọi get_ohlc gần nhất
 _CACHE = os.path.join(tempfile.gettempdir(), "claude_top5_price_cache.pkl")
 
 
@@ -178,65 +254,90 @@ def _load_cache(bars):
         with open(_CACHE, "rb") as fh:
             c = pickle.load(fh)
         if time.time() - c["ts"] < 40 * 60 and c["bars"] >= bars:
-            return c["data"]
+            return c
     except Exception:  # noqa: BLE001
         pass
-    return {}
+    return None
 
 
-def _save_cache(data, bars):
+def _save_cache(data, bars, src):
     try:
         old = _load_cache(bars)
-        old.update(data)
+        merged = old["data"] if old and old.get("src") == src else {}
+        merged.update(data)
         with open(_CACHE, "wb") as fh:
-            pickle.dump({"ts": time.time(), "bars": bars, "data": old}, fh)
+            pickle.dump({"ts": time.time(), "bars": bars, "src": src, "data": merged}, fh)
     except Exception:  # noqa: BLE001
         pass
 
 
 def get_ohlc(symbols, bars=None, max_minutes=20):
-    """Tải giá ngày từng mã (API chỉ trả dữ liệu khi hỏi 1 mã/lần). Trả về dict symbol -> DataFrame.
-    - Dùng lại giá vừa tải trong 40 phút (bot V1 tải xong thì V2 dùng lại, không tải lần 2).
-    - Mã bị chậm/lỗi được bỏ qua nhanh rồi thử lại 1 lần ở cuối.
-    - Dừng sớm (báo lỗi) nếu nguồn dữ liệu không phản hồi, thay vì treo hàng giờ."""
+    """Tải giá ngày (1 mã/lần) từ MỘT nguồn duy nhất cho cả lượt chạy.
+    - Chọn nguồn 1 lần: Vietcap; nếu Vietcap không ổn thì KBS.
+    - Nếu Vietcap hỏng giữa chừng: chuyển sang KBS và TẢI LẠI TOÀN BỘ từ KBS (không trộn 2 nguồn).
+    - Dùng lại giá vừa tải trong 40 phút (V1 tải xong thì V2 dùng lại).
+    - Mã lỗi được thử lại 1 lần ở cuối; mã vẫn thiếu ghi vào MISSING để báo lên Telegram."""
+    global SOURCE
     bars = bars or config.HISTORY_BARS
     symbols = list(symbols)
-    cache = _load_cache(bars) if len(symbols) > 5 else {}
-    out = {s: cache[s] for s in symbols if s in cache}
-    todo = [s for s in symbols if s not in out]
-    if cache:
-        log.info("Dùng lại giá đã tải: %d mã, cần tải thêm %d mã", len(out), len(todo))
-    failed, streak = [], 0
-    t0 = time.time()
-    for i, s in enumerate(todo, 1):
-        try:
-            got = _fetch_ohlc_batch([s], bars, fast=True)
-            out.update(got)
-            streak = 0 if got else streak + 1
-        except Exception:  # noqa: BLE001
-            failed.append(s)
-            streak += 1
-        time.sleep(config.PRICE_SLEEP)
-        if i % 50 == 0 or i == len(todo):
-            log.info("Đã tải giá %d/%d mã (có dữ liệu: %d, chậm/lỗi: %d, %.0fs)", i, len(todo), len(out),
-                     len(failed), time.time() - t0)
-        if streak >= 10:
-            raise RuntimeError(f"Nguồn dữ liệu Vietcap không phản hồi ({streak} mã liên tiếp lỗi). "
-                               f"Có thể đang bảo trì – thử lại sau.")
-        if time.time() - t0 > max_minutes * 60:
-            raise RuntimeError(f"Tải giá quá {max_minutes} phút (mới được {i}/{len(todo)} mã) – "
-                               f"nguồn dữ liệu đang chậm, thử lại sau.")
-    if failed:
-        log.info("Thử lại %d mã bị chậm: %s", len(failed), ", ".join(failed[:20]))
-        for s in failed:
+    c = _load_cache(bars) if len(symbols) > 5 else None
+    if c and not SOURCE:
+        SOURCE = c.get("src")
+    src = choose_source(bars)
+    cached = c["data"] if c and c.get("src") == src else {}
+
+    while True:
+        out = {s: cached[s] for s in symbols if s in cached}
+        todo = [s for s in symbols if s not in out]
+        if cached:
+            log.info("Dùng lại giá đã tải (%s): %d mã, cần tải thêm %d mã", SOURCE_NAME[src], len(out), len(todo))
+        failed, streak, switched = [], 0, False
+        t0 = time.time()
+        for i, s in enumerate(todo, 1):
             try:
-                out.update(_fetch_ohlc_batch([s], bars))
-            except Exception as e:  # noqa: BLE001
-                log.warning("Bỏ qua %s: %s", s, str(e)[:120])
-            if time.time() - t0 > max_minutes * 60:
+                got = _fetch_src(src, s, bars)
+            except Exception:  # noqa: BLE001
+                got = {}
+            if got:
+                out.update(got)
+                streak = 0
+            else:
+                failed.append(s)
+                streak += 1
+            time.sleep(config.PRICE_SLEEP)
+            if i % 50 == 0 or i == len(todo):
+                log.info("Đã tải giá %d/%d mã từ %s (lỗi %d, %.0fs)", i, len(todo), SOURCE_NAME[src],
+                         len(failed), time.time() - t0)
+            if streak >= 5 and src == "VCI":
+                log.warning("Vietcap hỏng giữa chừng -> chuyển sang KBS và tải lại toàn bộ")
+                SOURCE = src = "KBS"
+                cached = {}
+                switched = True
                 break
+            if streak >= 10:
+                raise RuntimeError(f"{SOURCE_NAME[src]} không phản hồi ({streak} mã liên tiếp lỗi) – thử lại sau.")
+            if time.time() - t0 > max_minutes * 60:
+                raise RuntimeError(f"Tải giá quá {max_minutes} phút (mới được {i}/{len(todo)} mã) – "
+                                   f"nguồn dữ liệu đang chậm, thử lại sau.")
+        if not switched:
+            break
+
+    if failed:
+        log.info("Thử lại %d mã lỗi: %s", len(failed), ", ".join(failed[:20]))
+        for s in list(failed):
+            try:
+                got = _fetch_src(src, s, bars, fast=False)
+            except Exception:  # noqa: BLE001
+                got = {}
+            if got:
+                out.update(got)
+                failed.remove(s)
+    MISSING.clear()
+    MISSING.extend(failed)
+    if failed:
+        log.warning("Thiếu dữ liệu %d mã: %s", len(failed), ", ".join(failed))
     if len(symbols) > 5:
-        _save_cache({s: out[s] for s in symbols if s in out}, bars)
+        _save_cache({s: out[s] for s in symbols if s in out}, bars, src)
     return out
 
 

@@ -61,7 +61,8 @@ def build_message(ctx):
     m = ctx["market"]
     lines = []
     lines.append(f"🤖 <b>CLAUDE BOT TOP5</b> – {ctx['session_label']}")
-    lines.append(f"🕐 {ctx['run_time']}  |  {ctx['data_note']}")
+    src = f"  |  nguồn giá: {ctx['source']}" if ctx.get("source") else ""
+    lines.append(f"🕐 {ctx['run_time']}  |  {ctx['data_note']}{src}")
     lines.append("")
     lines.append(f"📊 <b>THỊ TRƯỜNG: {m['regime']}</b>")
     above50 = "trên" if m["price"] > m["ma50"] else "dưới"
@@ -77,6 +78,10 @@ def build_message(ctx):
     )
     lines.append("")
 
+    miss = ctx.get("missing") or []
+    if miss:
+        lines.append(f"⚠️ Thiếu dữ liệu {len(miss)} mã (nguồn dữ liệu lỗi): {', '.join(miss[:15])}")
+        lines.append("")
     top = ctx["top"]
     if not top:
         lines.append("⚠️ Hôm nay không có cổ phiếu nào đủ điều kiện mua – đứng ngoài, giữ tiền.")

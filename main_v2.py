@@ -179,7 +179,9 @@ def run(dry=False, client=vci, now=None):
     perf2 = tracker.evaluate(price_map, idx_df, (5, 20), path=LOG_V2) if session == "CHIEU" else []
     perf1 = tracker.evaluate(price_map, idx_df, (5, 20), path=LOG_V1) if session == "CHIEU" else []
 
-    msgs = build(label, now, note, len(symbols_df), len(rows), len(ok), top, perf1, perf2, market, prio)
+    msgs = build(label, now, note, len(symbols_df), len(rows), len(ok), top, perf1, perf2, market, prio,
+                 list(getattr(client, "MISSING", [])),
+                 getattr(client, "SOURCE_NAME", {}).get(getattr(client, "SOURCE", None), ""))
     if dry:
         for m in msgs:
             print(m)
@@ -262,10 +264,10 @@ def _perf_lines(name, perf):
     return out
 
 
-def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio):
+def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio, missing=(), source=""):
     m = market
     L = [f"💎 <b>CLAUDE BOT V2 – CỔ PHIẾU CHẤT LƯỢNG</b> – {label}",
-         f"🕐 {now:%H:%M %d/%m/%Y} | {note}",
+         f"🕐 {now:%H:%M %d/%m/%Y} | {note}" + (f" | nguồn giá: {source}" if source else ""),
          "",
          f"📊 <b>THỊ TRƯỜNG: {m['regime']}</b> – VN-Index {m['price']:,.2f} ({_pct(m['ret20'])} 20 phiên), "
          f"{m['breadth']:.0f}% mã trên MA50",
@@ -273,6 +275,8 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio)
          "",
          f"🔎 Quét {n_all:,} mã → {n_liq} mã GTGD ≥3 tỷ → {n_ok} mã đủ dữ liệu tài chính",
          "📐 Chọn theo: Biên LN + ROE + P/B + Giá ít biến động + Xu hướng rõ"]
+    if missing:
+        L.append(f"⚠️ Thiếu dữ liệu {len(missing)} mã (nguồn dữ liệu lỗi): {', '.join(list(missing)[:15])}")
     if top:
         L += ["", f"✅ <b>CỔ PHIẾU NÊN MUA ({len(top)} mã):</b> " + " · ".join(x['symbol'] for x in top)]
         if prio:
