@@ -27,6 +27,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 
 import config
+import report
 import vci_client as vci
 
 D = config.DATA_DIR
@@ -326,7 +327,21 @@ def run(do_upload=False, client=vci, now=None):
        .to_csv(os.path.join(D, "forward_test.csv"), index=False, encoding="utf-8-sig")
     print(f"Đã tạo {path} – {len(res)} lệnh")
     if do_upload:
-        upload(path)
+        try:
+            ok = upload(path)
+        except Exception as e:
+            print("Lỗi tải lên Drive:", e)
+            ok = False
+        if ok:
+            msg = ("📊 FORWARD TEST _ CLAUDE\n"
+                   f"✅ Đã cập nhật Báo cáo kiểm định ngày {now:%d/%m/%Y}.\n"
+                   "📁 Báo cáo chi tiết đã được cập nhật trên Google Drive.")
+        else:
+            msg = ("📊 FORWARD TEST _ CLAUDE\n"
+                   f"⚠️ Chưa tải được Báo cáo kiểm định ngày {now:%d/%m/%Y} lên Google Drive.")
+        report.send_telegram([msg])
+        if not ok:
+            raise SystemExit(1)
     return res
 
 
