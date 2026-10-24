@@ -4,8 +4,11 @@ Gọi trực tiếp bằng requests để:
   - tải giá của 40 mã trong 1 lần gọi (nhanh, ít bị chặn)
   - không phụ thuộc phiên bản vnstock thay đổi liên tục
 """
-import time
 import logging
+import os
+import pickle
+import tempfile
+import time
 
 import pandas as pd
 import requests
@@ -35,11 +38,11 @@ _session = requests.Session()
 _session.headers.update(HEADERS)
 
 
-def _request(method, url, retries=2, **kwargs):
+def _request(method, url, retries=2, timeout=(10, 20), **kwargs):
     last_err = None
     for attempt in range(retries):
         try:
-            r = _session.request(method, url, timeout=(10, 20), **kwargs)
+            r = _session.request(method, url, timeout=timeout, **kwargs)
             if r.status_code == 429:
                 wait = 10 * (attempt + 1)
                 log.warning("Bị giới hạn tốc độ (429), chờ %ss", wait)
@@ -143,14 +146,15 @@ def _iter_items(data, symbols):
             yield sym, item
 
 
-def _fetch_ohlc_batch(symbols, bars):
+def _fetch_ohlc_batch(symbols, bars, fast=False):
     payload = {
         "timeFrame": "ONE_DAY",
         "symbols": list(symbols),
         "to": int(time.time()) + 86400,
         "countBack": int(bars),
     }
-    data = _request("POST", f"{TRADING_URL}/chart/OHLCChart/gap-chart", json=payload)
+    kw = {"retries": 1, "timeout": (8, 10)} if fast else {}
+    data = _request("POST", f"{TRADING_URL}/chart/OHLCChart/gap-chart", json=payload, **kw)
     _last_raw["sample"] = str(data)[:400]
     result = {}
     for sym, item in _iter_items(data, symbols):
@@ -166,32 +170,73 @@ def _fetch_ohlc_batch(symbols, bars):
     return result
 
 
-def get_ohlc(symbols, bars=None, max_minutes=15):
+_CACHE = os.path.join(tempfile.gettempdir(), "claude_top5_price_cache.pkl")
+
+
+def _load_cache(bars):
+    try:
+        with open(_CACHE, "rb") as fh:
+            c = pickle.load(fh)
+        if time.time() - c["ts"] < 40 * 60 and c["bars"] >= bars:
+            return c["data"]
+    except Exception:  # noqa: BLE001
+        pass
+    return {}
+
+
+def _save_cache(data, bars):
+    try:
+        old = _load_cache(bars)
+        old.update(data)
+        with open(_CACHE, "wb") as fh:
+            pickle.dump({"ts": time.time(), "bars": bars, "data": old}, fh)
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def get_ohlc(symbols, bars=None, max_minutes=20):
     """Tải giá ngày từng mã (API chỉ trả dữ liệu khi hỏi 1 mã/lần). Trả về dict symbol -> DataFrame.
-    Dừng sớm (báo lỗi) nếu nguồn dữ liệu không phản hồi, thay vì treo hàng giờ."""
+    - Dùng lại giá vừa tải trong 40 phút (bot V1 tải xong thì V2 dùng lại, không tải lần 2).
+    - Mã bị chậm/lỗi được bỏ qua nhanh rồi thử lại 1 lần ở cuối.
+    - Dừng sớm (báo lỗi) nếu nguồn dữ liệu không phản hồi, thay vì treo hàng giờ."""
     bars = bars or config.HISTORY_BARS
-    out, fails, streak = {}, 0, 0
     symbols = list(symbols)
+    cache = _load_cache(bars) if len(symbols) > 5 else {}
+    out = {s: cache[s] for s in symbols if s in cache}
+    todo = [s for s in symbols if s not in out]
+    if cache:
+        log.info("Dùng lại giá đã tải: %d mã, cần tải thêm %d mã", len(out), len(todo))
+    failed, streak = [], 0
     t0 = time.time()
-    for i, s in enumerate(symbols, 1):
+    for i, s in enumerate(todo, 1):
         try:
-            got = _fetch_ohlc_batch([s], bars)
+            got = _fetch_ohlc_batch([s], bars, fast=True)
             out.update(got)
             streak = 0 if got else streak + 1
-        except Exception as e:  # noqa: BLE001
-            fails += 1
+        except Exception:  # noqa: BLE001
+            failed.append(s)
             streak += 1
-            log.warning("Lỗi tải %s: %s", s, str(e)[:150])
         time.sleep(config.PRICE_SLEEP)
-        if i % 50 == 0 or i == len(symbols):
-            log.info("Đã tải giá %d/%d mã (có dữ liệu: %d, lỗi: %d, %.0fs)", i, len(symbols), len(out), fails,
-                     time.time() - t0)
+        if i % 50 == 0 or i == len(todo):
+            log.info("Đã tải giá %d/%d mã (có dữ liệu: %d, chậm/lỗi: %d, %.0fs)", i, len(todo), len(out),
+                     len(failed), time.time() - t0)
         if streak >= 10:
             raise RuntimeError(f"Nguồn dữ liệu Vietcap không phản hồi ({streak} mã liên tiếp lỗi). "
                                f"Có thể đang bảo trì – thử lại sau.")
         if time.time() - t0 > max_minutes * 60:
-            raise RuntimeError(f"Tải giá quá {max_minutes} phút (mới được {i}/{len(symbols)} mã) – "
+            raise RuntimeError(f"Tải giá quá {max_minutes} phút (mới được {i}/{len(todo)} mã) – "
                                f"nguồn dữ liệu đang chậm, thử lại sau.")
+    if failed:
+        log.info("Thử lại %d mã bị chậm: %s", len(failed), ", ".join(failed[:20]))
+        for s in failed:
+            try:
+                out.update(_fetch_ohlc_batch([s], bars))
+            except Exception as e:  # noqa: BLE001
+                log.warning("Bỏ qua %s: %s", s, str(e)[:120])
+            if time.time() - t0 > max_minutes * 60:
+                break
+    if len(symbols) > 5:
+        _save_cache({s: out[s] for s in symbols if s in out}, bars)
     return out
 
 
