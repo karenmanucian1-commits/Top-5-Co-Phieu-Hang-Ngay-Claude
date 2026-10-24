@@ -208,6 +208,11 @@ if __name__ == "__main__":
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     try:
         main()
+    except Exception:  # noqa: BLE001
+        import traceback
+        p("")
+        p("❌ LỖI KHI KIỂM TRA:")
+        p(traceback.format_exc())
     finally:
         with open(OUT, "w", encoding="utf-8") as fh:
             fh.write("\n".join(L) + "\n")
