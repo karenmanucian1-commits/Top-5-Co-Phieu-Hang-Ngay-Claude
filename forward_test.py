@@ -149,6 +149,7 @@ def run(send=False, client=vci, now=None):
     for bot, df in logs.items():
         if df.empty:
             continue
+        df = df[df["status"] == "MUA"]          # chỉ chấm mã bot khuyến nghị NÊN MUA
         for _, r in dedupe(df, days).iterrows():
             px = prices.get(r["symbol"])
             if px is None:
@@ -167,18 +168,13 @@ def run(send=False, client=vci, now=None):
     if res.empty:
         parts.append("Chưa có lệnh nào có giá sau ngày khuyến nghị.")
     else:
-        v1 = res[res["bot"] == "V1"]
-        v2 = res[res["bot"] == "V2"]
-        if len(v2[v2["status"] == "MUA"]):
-            v2 = v2[v2["status"] == "MUA"]
-            parts.append(stats(v2, "💎 V2 – mã ✅ NÊN MUA"))
-            if v2["priority"].sum():
-                parts.append(stats(v2[v2["priority"] == 1], "💎 V2 – ⭐ Ưu tiên #1"))
-        if len(v1):
-            parts.append(stats(v1, "🤖 V1 – cả TOP5"))
-            if (v1["status"] == "MUA").any():
-                parts.append(stats(v1[v1["status"] == "MUA"], "🤖 V1 – mã MUA ĐƯỢC"))
-        valid = res[(res["bot"] == "V1") | (res["status"] == "MUA")]   # V2: chỉ lệnh ✅
+        for bot, icon in (("V1", "🤖"), ("V2", "💎")):
+            g = res[res["bot"] == bot]
+            if len(g):
+                parts.append(stats(g, f"{icon} {bot} – mã NÊN MUA"))
+                if g["priority"].sum():
+                    parts.append(stats(g[g["priority"] == 1], f"{icon} {bot} – ⭐ Ưu tiên #1"))
+        valid = res
         open_now = valid[~valid["closed"]].sort_values("r_now", ascending=False)
         if len(open_now):
             lines = [f"{r.bot} {r.symbol} ({r.run_date:%d/%m}): {r.r_now:+.1f}% sau {r.bars} phiên"
