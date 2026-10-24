@@ -10,7 +10,8 @@ Cách tính (giống người mua thật):
   - T0, T1 ... T20 = lãi/lỗ theo giá ĐÓNG CỬA của từng phiên so với giá mua, đã trừ phí mua+bán 0.4%.
   - Một mã được khuyên nhiều lần liền: chỉ tính lần đầu; sau 20 phiên khuyên lại mới tính lệnh mới.
   - Kế hoạch của bot (từ T2 – bán được do T+2.5): giá cao nhất chạm mốc chốt lời 1 -> "Chạm chốt lời";
-    giá đóng cửa dưới mức cắt lỗ -> "Dính cắt lỗ". Cái nào tới trước tính cái đó.
+    giá đóng cửa dưới mức cắt lỗ -> "Dính cắt lỗ". Cái nào tới trước tính cái đó;
+    cùng phiên xảy ra cả hai thì tính CẮT LỖ (bảo thủ).
 """
 import argparse
 import base64
@@ -130,11 +131,12 @@ def build_rows(prices, idx):
             plan = "Chưa chạm"
             t1, stop = r.get("t1"), r.get("stop")
             for j in range(2, n):
-                if pd.notna(t1) and t1 and seg["high"].iloc[j] >= t1:
-                    plan = f"Chạm chốt lời (T{j})"
-                    break
+                # Bảo thủ: cùng phiên vừa chạm T1 vừa đóng cửa dưới cắt lỗ -> tính CẮT LỖ trước
                 if pd.notna(stop) and stop and seg["close"].iloc[j] < stop:
                     plan = f"Dính cắt lỗ (T{j})"
+                    break
+                if pd.notna(t1) and t1 and seg["high"].iloc[j] >= t1:
+                    plan = f"Chạm chốt lời (T{j})"
                     break
             row["Kế hoạch bot"] = plan
             row["Trạng thái"] = "Đã đủ 20 phiên" if n > HOLD else f"Đang theo dõi ({n - 1}/20 phiên)"
