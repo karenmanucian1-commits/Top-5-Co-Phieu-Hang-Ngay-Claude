@@ -43,6 +43,7 @@ W_TECH = 0.40
 W_FUND = 0.35
 W_SETUP = 0.25
 TOP_N = 5
+MAX_BUY_V1 = 10                   # V1: chỉ liệt kê mã MUA ĐƯỢC, tối đa 10 mã
 MAX_PER_SECTOR = 2                # Tối đa 2 mã cùng ngành trong TOP5
 
 # ===================== PHIÊN SÁNG =====================

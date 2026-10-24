@@ -79,10 +79,10 @@ def build_message(ctx):
 
     top = ctx["top"]
     if not top:
-        lines.append("⚠️ Hôm nay không có mã nào vượt qua đủ bộ lọc. Đứng ngoài quan sát.")
+        lines.append("⚠️ Hôm nay không có cổ phiếu nào đủ điều kiện mua – đứng ngoài, giữ tiền.")
         return "\n".join(lines), []
 
-    lines.append("🏆 <b>TOP 5:</b> " + " · ".join(s["symbol"] for s in top))
+    lines.append(f"✅ <b>CỔ PHIẾU NÊN MUA ({len(top)} mã):</b> " + " · ".join(s["symbol"] for s in top))
     pr = ctx["priority"]
     if pr:
         lines.append(f"⭐ <b>ƯU TIÊN #1: {pr['symbol']}</b> – mua trong vùng {_p(pr['z']['zone_low'])}–{_p(pr['z']['zone_high'])}, cắt lỗ {_p(pr['z']['stop'])}")

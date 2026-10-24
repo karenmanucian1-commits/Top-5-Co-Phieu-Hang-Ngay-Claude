@@ -156,7 +156,7 @@ def run(dry=False, client=vci, now=None):
     breadth = sum(1 for r in rows if r["f"]["price"] > r["f"]["ma50"]) / len(rows) * 100
     market = an.market_regime(idx_df, breadth)
 
-    # Chỉ lấy mã ✅ NÊN MUA trong nhóm điểm cao (backtest: mã ✅ trong top ~30 điểm đều hiệu quả,
+    # Chỉ lấy mã ✅ NÊN MUA trong nhóm top 30 điểm (backtest: mã ✅ trong top ~30 đều hiệu quả,
     # ngoài top 50 kém hẳn). Tối đa MAX_BUY mã, tối đa MAX_SECTOR_V2 mã/ngành.
     top, per = [], {}
     for rank, (_, r) in enumerate(ok.iterrows(), 1):

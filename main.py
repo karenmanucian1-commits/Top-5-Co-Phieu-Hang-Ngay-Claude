@@ -210,13 +210,16 @@ def run(dry=False, client=vci, now=None):
 
     # ---------- 4. Xếp hạng TOP5 (tối đa 2 mã/ngành) ----------
     scored.sort(key=lambda x: x["final"], reverse=True)
+    # Chỉ giữ mã MUA ĐƯỢC (giá trong vùng mua, R:R đạt, có BCTC), tối đa 10 mã, 2 mã/ngành
     top, per_sector = [], {}
     for x in scored:
+        if x["z"]["status"] != "MUA" or x["fd"] is None:
+            continue
         if per_sector.get(x["sector"], 0) >= config.MAX_PER_SECTOR:
             continue
         top.append(x)
         per_sector[x["sector"]] = per_sector.get(x["sector"], 0) + 1
-        if len(top) >= config.TOP_N:
+        if len(top) >= config.MAX_BUY_V1:
             break
 
     # Ưu tiên #1: điểm cao nhất trong số mã ĐANG mua được, có BCTC
