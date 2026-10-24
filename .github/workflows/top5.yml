@@ -47,19 +47,6 @@ jobs:
           mkdir -p data/logs
           python main_v2.py 2>&1 | tee data/logs/last_run_v2.log
 
-      - name: Forward test (sang thu 2)
-        continue-on-error: true
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TZ: Asia/Ho_Chi_Minh
-        run: |
-          if [ "$(date +%u)" = "1" ] && [ "$(date +%H)" -lt 9 ]; then
-            python forward_test.py --send
-          else
-            echo "Khong phai sang thu 2 - bo qua"
-          fi
-
       - name: Luu nhat ky
         if: always()
         run: |

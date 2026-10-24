@@ -1,6 +1,8 @@
-name: FORWARD TEST CLAUDE
+name: KIEM DINH CUOI NGAY CLAUDE
 
 on:
+  schedule:
+    - cron: "5 11 * * 1-5"   # 18:05 giờ Việt Nam, thứ 2 – thứ 6
   workflow_dispatch:
 
 permissions:
@@ -13,7 +15,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -25,14 +27,14 @@ jobs:
       - name: Cai thu vien
         run: pip install -r requirements.txt
 
-      - name: Cham diem khuyen nghi
+      - name: Bao cao kiem dinh Excel len Google Drive
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GDRIVE_WEBHOOK: ${{ secrets.GDRIVE_WEBHOOK }}
           TZ: Asia/Ho_Chi_Minh
         run: |
           mkdir -p data/logs
-          python forward_test.py --send 2>&1 | tee data/logs/last_forward.log
+          set -o pipefail
+          python forward_excel.py --upload 2>&1 | tee data/logs/last_forward.log
 
       - name: Luu ket qua
         if: always()
@@ -40,6 +42,6 @@ jobs:
           git config user.name "claude-top5-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/ || true
-          git diff --cached --quiet || git commit -m "Cap nhat forward test"
+          git diff --cached --quiet || git commit -m "Bao cao kiem dinh cuoi ngay"
           git pull --rebase || true
           git push || echo "Khong push duoc"
