@@ -31,7 +31,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TZ: Asia/Ho_Chi_Minh
-        run: python main.py
+        run: |
+          set -o pipefail
+          mkdir -p data/logs
+          python main.py 2>&1 | tee data/logs/last_run_v1.log
 
       - name: Chay bot V2
         continue-on-error: true
@@ -39,7 +42,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TZ: Asia/Ho_Chi_Minh
-        run: python main_v2.py
+        run: |
+          set -o pipefail
+          mkdir -p data/logs
+          python main_v2.py 2>&1 | tee data/logs/last_run_v2.log
 
       - name: Luu nhat ky
         if: always()
