@@ -178,7 +178,8 @@ def run(send=False, client=vci, now=None):
             parts.append(stats(v1, "🤖 V1 – cả TOP5"))
             if (v1["status"] == "MUA").any():
                 parts.append(stats(v1[v1["status"] == "MUA"], "🤖 V1 – mã MUA ĐƯỢC"))
-        open_now = res[~res["closed"]].sort_values("r_now", ascending=False)
+        valid = res[(res["bot"] == "V1") | (res["status"] == "MUA")]   # V2: chỉ lệnh ✅
+        open_now = valid[~valid["closed"]].sort_values("r_now", ascending=False)
         if len(open_now):
             lines = [f"{r.bot} {r.symbol} ({r.run_date:%d/%m}): {r.r_now:+.1f}% sau {r.bars} phiên"
                      for r in open_now.head(12).itertuples()]
