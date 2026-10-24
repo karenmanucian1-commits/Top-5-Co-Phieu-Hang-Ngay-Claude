@@ -280,9 +280,11 @@ def get_ohlc(symbols, bars=None, max_minutes=20):
     global SOURCE
     bars = bars or config.HISTORY_BARS
     symbols = list(symbols)
-    c = _load_cache(bars) if len(symbols) > 5 else None
-    if c and not SOURCE:
-        SOURCE = c.get("src")
+    c = _load_cache(bars)
+    if c and c.get("src"):
+        SOURCE = c["src"]          # bot V1 vừa tải xong -> V2 dùng đúng nguồn & dữ liệu đó
+    if len(symbols) <= 5:
+        c = None
     src = choose_source(bars)
     cached = c["data"] if c and c.get("src") == src else {}
 

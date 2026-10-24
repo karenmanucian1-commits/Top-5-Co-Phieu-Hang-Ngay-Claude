@@ -60,7 +60,7 @@ def _comment(s):
 def build_message(ctx):
     m = ctx["market"]
     lines = []
-    lines.append(f"🤖 <b>CLAUDE BOT TOP5</b> – {ctx['session_label']}")
+    lines.append(f"🤖 <b>CLAUDE BOT V1</b> – {ctx['session_label']}")
     src = f"  |  nguồn giá: {ctx['source']}" if ctx.get("source") else ""
     lines.append(f"🕐 {ctx['run_time']}  |  {ctx['data_note']}{src}")
     lines.append("")
