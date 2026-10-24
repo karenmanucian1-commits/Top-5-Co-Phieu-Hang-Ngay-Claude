@@ -266,7 +266,7 @@ def _perf_lines(name, perf):
 
 def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio, missing=(), source=""):
     m = market
-    L = [f"💎 <b>CLAUDE BOT V2</b> – CỔ PHIẾU CHẤT LƯỢNG – {label}",
+    L = [f"💎 <b>CLAUDE BOT V2</b> – {label}",
          f"🕐 {now:%H:%M %d/%m/%Y} | {note}" + (f" | nguồn giá: {source}" if source else ""),
          "",
          f"📊 <b>THỊ TRƯỜNG: {m['regime']}</b> – VN-Index {m['price']:,.2f} ({_pct(m['ret20'])} 20 phiên), "
