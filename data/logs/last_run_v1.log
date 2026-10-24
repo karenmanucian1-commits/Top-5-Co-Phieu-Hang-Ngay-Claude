@@ -1,0 +1,14 @@
+2026-10-24 13:42:23,011 INFO Tổng số mã: 1519
+2026-10-24 13:42:24,319 INFO Nguồn dữ liệu giá cho lượt chạy này: Vietcap
+2026-10-24 13:42:24,870 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-10-24 13:42:24,873 INFO Dùng danh sách thanh khoản đã lưu: tải giá 243 mã
+2026-10-24 13:43:33,357 WARNING Vietcap hỏng giữa chừng -> chuyển sang KBS và tải lại toàn bộ
+2026-10-24 13:44:13,728 INFO Đã tải giá 50/243 mã từ KBS (lỗi 0, 40s)
+2026-10-24 13:44:52,718 INFO Đã tải giá 100/243 mã từ KBS (lỗi 0, 79s)
+2026-10-24 13:45:33,456 INFO Đã tải giá 150/243 mã từ KBS (lỗi 1, 120s)
+2026-10-24 13:46:12,079 INFO Đã tải giá 200/243 mã từ KBS (lỗi 2, 159s)
+2026-10-24 13:46:46,740 INFO Đã tải giá 243/243 mã từ KBS (lỗi 2, 193s)
+2026-10-24 13:46:46,740 INFO Thử lại 2 mã lỗi: ITA, PSH
+2026-10-24 13:46:47,285 WARNING Thiếu dữ liệu 2 mã: ITA, PSH
+2026-10-24 13:46:47,294 INFO Tải được giá 241 mã
+2026-10-24 13:46:47,911 INFO Thanh khoản: 187 | Xu hướng tăng: 87
