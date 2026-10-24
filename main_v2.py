@@ -173,6 +173,7 @@ def run(dry=False, client=vci, now=None):
         top.append(r)
         per[sec] = per.get(sec, 0) + 1
     buy = top
+    LAST.update({"ok": ok, "market": market, "industries": industries, "rows": rows})
     prio = max(buy, key=lambda x: x["score"]) if buy else None
 
     # ---- Hiệu quả thật: V2 và V1 (cùng thước đo) ----
@@ -334,6 +335,7 @@ def build(label, now, note, n_all, n_liq, n_ok, top, perf1, perf2, market, prio,
 
 
 _META = {}
+LAST = {}   # dữ liệu lượt chạy gần nhất (dùng cho audit.py)
 
 
 def meta_ex(x):

@@ -239,6 +239,7 @@ def run(dry=False, client=vci, now=None):
         "funnel": {"all": len(symbols_df), "scanned": len(price_map), "liquid": len(liquid), "trend": len(trend),
                    "fund": len(shortlist), "passed": len(scored)},
         "top": top, "priority": priority, "perf": perf,
+        "_trend": trend, "_shortlist": shortlist, "_scored": scored, "_liquid": liquid,
         "missing": list(getattr(client, "MISSING", [])),
         "source": getattr(client, "SOURCE_NAME", {}).get(getattr(client, "SOURCE", None), ""),
     }

@@ -1,0 +1,42 @@
+name: KIEM TRA TOAN DIEN CLAUDE
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: claude-top5
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Cai thu vien
+        run: pip install -r requirements.txt
+
+      - name: Kiem tra
+        continue-on-error: true
+        env:
+          TZ: Asia/Ho_Chi_Minh
+        run: python audit.py
+
+      - name: Luu ket qua
+        if: always()
+        run: |
+          git config user.name "claude-top5-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/logs/ || true
+          git diff --cached --quiet || git commit -m "Ket qua kiem tra toan dien"
+          git pull --rebase || true
+          git push || echo "Khong push duoc"
