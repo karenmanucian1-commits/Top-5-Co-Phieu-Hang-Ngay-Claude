@@ -1,0 +1,45 @@
+name: FORWARD TEST CLAUDE
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: claude-top5
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Cai thu vien
+        run: pip install -r requirements.txt
+
+      - name: Cham diem khuyen nghi
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TZ: Asia/Ho_Chi_Minh
+        run: |
+          mkdir -p data/logs
+          python forward_test.py --send 2>&1 | tee data/logs/last_forward.log
+
+      - name: Luu ket qua
+        if: always()
+        run: |
+          git config user.name "claude-top5-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/ || true
+          git diff --cached --quiet || git commit -m "Cap nhat forward test"
+          git pull --rebase || true
+          git push || echo "Khong push duoc"
