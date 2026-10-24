@@ -19,7 +19,7 @@ MA50_SLOPE_LOOKBACK = 10          # so MA50 hiện tại với 10 phiên trướ
 MA50_SLOPE_MIN = -0.01            # MA50 không giảm quá 1%
 
 # ===================== LỚP 3: TÀI CHÍNH BẮT BUỘC =====================
-FUND_CANDIDATES = 60              # Chỉ lấy BCTC cho 60 mã kỹ thuật tốt nhất (giảm tải)
+FUND_CANDIDATES = 200             # Xét BCTC cho TẤT CẢ mã xu hướng tăng (không bỏ sót mã vùng mua)
 MIN_ROE_PCT = 5.0                 # ROE < 5% -> loại
 REQUIRE_POSITIVE_EPS = True       # Đang lỗ (EPS <= 0 hoặc P/E <= 0) -> loại
 FUND_CACHE_DAYS = 5               # BCTC ra theo quý, lưu cache 5 ngày
