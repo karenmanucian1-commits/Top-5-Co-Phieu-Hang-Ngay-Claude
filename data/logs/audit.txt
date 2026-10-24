@@ -1,0 +1,24 @@
+KIỂM TRA TOÀN DIỆN BOT V1 + V2 – 14:19 24/10/2026
+
+======================================================================
+1. DỮ LIỆU GIÁ – QUÉT TOÀN THỊ TRƯỜNG
+======================================================================
+Tổng mã niêm yết (HSX/HNX/UPCOM, 3 ký tự): 1519
+VN-Index phiên gần nhất: 23/10/2026 – đóng cửa 1,774.15
+Nguồn giá: KBS | tải được 1468/1519 mã | lỗi 51: X77, VXP, VTM, VPW, VMA, VLP, VDB, VCE, UTT, UMC, TTZ, TTB, TQW, TNA, TKA, TGG, TBW, SVH, SPI, SJF, SD8, PSH, PQN, PPI, PID, NSS, MTB, MHL, MES, MBN
+Mã qua lọc thanh khoản (≥3 tỷ...) khi quét toàn bộ: 187
+Danh sách thanh khoản đang lưu (ngày 2026-10-22): 243 mã
+➜ Mã đủ thanh khoản nhưng KHÔNG có trong danh sách lưu (bot hằng ngày sẽ bỏ sót): 0 ✅
+➜ Mã thanh khoản có giá chưa cập nhật phiên 23/10: 0 ✅
+
+======================================================================
+2. ĐỐI CHIẾU GIÁ VIETCAP vs KBS (mẫu 25 mã thanh khoản lớn)
+======================================================================
+So được 15 mã. Chênh lệch giá đóng cửa lớn nhất (20 phiên): NVL 0.25%, HDB 0.06%, VIC 0.00%, TCB 0.00%, VHM 0.00%
+Cùng ngày giao dịch mới nhất: 15/15
+➜ ✅ Hai nguồn khớp nhau (chênh < 0.5%)
+Không so được: MBB(VCI lỗi), CTG(VCI lỗi), MWG(VCI lỗi), PVT(VCI lỗi), ACB(VCI lỗi), VCB(VCI lỗi), GEX(VCI lỗi), MSB(VCI lỗi), VCI(VCI lỗi), TPB(VCI lỗi)
+
+======================================================================
+3. BOT V1 – KIỂM TRA ĐIỀU KIỆN & MÃ BỊ SÓT
+======================================================================
