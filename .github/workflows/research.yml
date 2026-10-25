@@ -1,0 +1,53 @@
+name: RESEARCH V3 CLAUDE
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: claude-research
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Cai thu vien
+        run: pip install -r requirements.txt
+
+      - name: Cache du lieu lich su
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/bt_prices.pkl
+            data/bt_ratios.json
+          key: bt-data-${{ github.run_id }}
+          restore-keys: bt-data-
+
+      - name: Nghien cuu V3
+        env:
+          TZ: Asia/Ho_Chi_Minh
+        run: |
+          mkdir -p data/research
+          set -o pipefail
+          python research_v3.py 2>&1 | tee data/research/v3_log.txt
+
+      - name: Luu ket qua
+        if: always()
+        run: |
+          git config user.name "claude-top5-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/research/ || true
+          git diff --cached --quiet || git commit -m "Ket qua nghien cuu V3"
+          git pull --rebase || true
+          git push || echo "Khong push duoc"
