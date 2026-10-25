@@ -1,0 +1,115 @@
+2026-10-25 10:58:26,631 Nguồn dữ liệu giá cho lượt chạy này: Vietcap
+2026-10-25 10:58:27,215 Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-10-25 10:58:27,215 Tải 1100 phiên cho 1519 mã...
+2026-10-25 10:59:36,297 Vietcap hỏng giữa chừng -> chuyển sang KBS và tải lại toàn bộ
+2026-10-25 11:00:22,796 Đã tải giá 50/1519 mã từ KBS (lỗi 2, 46s)
+2026-10-25 11:01:12,175 Đã tải giá 100/1519 mã từ KBS (lỗi 3, 96s)
+2026-10-25 11:02:02,672 Đã tải giá 150/1519 mã từ KBS (lỗi 3, 146s)
+2026-10-25 11:02:47,652 Đã tải giá 200/1519 mã từ KBS (lỗi 6, 191s)
+2026-10-25 11:03:36,313 Đã tải giá 250/1519 mã từ KBS (lỗi 7, 240s)
+2026-10-25 11:04:25,816 Đã tải giá 300/1519 mã từ KBS (lỗi 7, 290s)
+2026-10-25 11:05:15,128 Đã tải giá 350/1519 mã từ KBS (lỗi 8, 339s)
+2026-10-25 11:06:03,828 Đã tải giá 400/1519 mã từ KBS (lỗi 9, 388s)
+2026-10-25 11:06:53,811 Đã tải giá 450/1519 mã từ KBS (lỗi 9, 438s)
+2026-10-25 11:07:44,767 Đã tải giá 500/1519 mã từ KBS (lỗi 9, 488s)
+2026-10-25 11:08:33,140 Đã tải giá 550/1519 mã từ KBS (lỗi 9, 537s)
+2026-10-25 11:09:19,595 Đã tải giá 600/1519 mã từ KBS (lỗi 10, 583s)
+2026-10-25 11:10:10,602 Đã tải giá 650/1519 mã từ KBS (lỗi 10, 634s)
+2026-10-25 11:11:00,984 Đã tải giá 700/1519 mã từ KBS (lỗi 10, 685s)
+2026-10-25 11:11:50,984 Đã tải giá 750/1519 mã từ KBS (lỗi 10, 735s)
+2026-10-25 11:12:36,990 Đã tải giá 800/1519 mã từ KBS (lỗi 12, 781s)
+2026-10-25 11:13:25,625 Đã tải giá 850/1519 mã từ KBS (lỗi 12, 829s)
+2026-10-25 11:14:16,378 Đã tải giá 900/1519 mã từ KBS (lỗi 12, 880s)
+2026-10-25 11:15:08,090 Đã tải giá 950/1519 mã từ KBS (lỗi 12, 932s)
+2026-10-25 11:15:53,472 Đã tải giá 1000/1519 mã từ KBS (lỗi 13, 977s)
+2026-10-25 11:16:42,382 Đã tải giá 1050/1519 mã từ KBS (lỗi 13, 1026s)
+2026-10-25 11:17:32,701 Đã tải giá 1100/1519 mã từ KBS (lỗi 13, 1076s)
+2026-10-25 11:18:20,519 Đã tải giá 1150/1519 mã từ KBS (lỗi 14, 1124s)
+2026-10-25 11:19:08,177 Đã tải giá 1200/1519 mã từ KBS (lỗi 14, 1172s)
+2026-10-25 11:19:59,328 Đã tải giá 1250/1519 mã từ KBS (lỗi 14, 1223s)
+2026-10-25 11:20:49,876 Đã tải giá 1300/1519 mã từ KBS (lỗi 17, 1274s)
+2026-10-25 11:21:35,748 Đã tải giá 1350/1519 mã từ KBS (lỗi 17, 1319s)
+2026-10-25 11:22:21,322 Đã tải giá 1400/1519 mã từ KBS (lỗi 17, 1365s)
+2026-10-25 11:23:07,615 Đã tải giá 1450/1519 mã từ KBS (lỗi 18, 1411s)
+2026-10-25 11:23:55,693 Đã tải giá 1500/1519 mã từ KBS (lỗi 18, 1459s)
+2026-10-25 11:24:18,578 Đã tải giá 1519/1519 mã từ KBS (lỗi 18, 1482s)
+2026-10-25 11:24:18,578 Thử lại 18 mã lỗi: X77, VTM, VMA, VDB, VCE, UTT, TQW, TBW, SVH, PQN, MES, MBN, HNR, EGL, CPH, CNA, CMP, BCV
+2026-10-25 11:24:23,839 Thiếu dữ liệu 18 mã: X77, VTM, VMA, VDB, VCE, UTT, TQW, TBW, SVH, PQN, MES, MBN, HNR, EGL, CPH, CNA, CMP, BCV
+2026-10-25 11:25:02,030 Không lấy được phân ngành từ Vietcap: Gọi API thất bại: https://iq.vietcap.com.vn/api/iq-insight-service/v2/company/se
+2026-10-25 11:25:02,031 Dùng phân ngành đã lưu (480 mã)
+2026-10-25 11:25:11,686 558 mã từng đạt GTGD ≥ 3 tỷ
+2026-10-25 11:31:02,848 Không lấy được BCTC BMI: Gọi API thất bại: https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/BMI/statistics-financial -> HTTPSConnectionPool(host='iq.vietcap.com.vn', port=443): Read timed out. (read timeout=20)
+2026-10-25 11:31:41,766 Đã xử lý tới 2023-06-02
+2026-10-25 11:33:18,583 Không lấy được BCTC FMC: Gọi API thất bại: https://iq.vietcap.com.vn/api/iq-insight-service/v1/company/FMC/statistics-financial -> HTTPSConnectionPool(host='iq.vietcap.com.vn', port=443): Read timed out. (read timeout=20)
+2026-10-25 11:34:28,086 Đã xử lý tới 2023-10-24
+2026-10-25 11:34:58,242 Đã xử lý tới 2024-03-20
+2026-10-25 11:35:56,463 Đã xử lý tới 2024-08-13
+2026-10-25 11:36:26,316 Đã xử lý tới 2025-01-03
+2026-10-25 11:37:11,406 Đã xử lý tới 2025-06-05
+2026-10-25 11:37:41,301 Đã xử lý tới 2025-10-27
+2026-10-25 11:38:23,525 Đã xử lý tới 2026-03-25
+2026-10-25 11:38:45,357 Đã xử lý tới 2026-08-17
+2026-10-25 11:38:51,057 Tổng 205437 dòng mã-ngày
+2026-10-25 11:38:56,298 Xong S0 Tất cả mã thanh khoản (mốc so sánh) H=5 (41515 lệnh)
+2026-10-25 11:38:59,334 Xong S0 Tất cả mã thanh khoản (mốc so sánh) H=10 (20992 lệnh)
+2026-10-25 11:39:01,572 Xong S0 Tất cả mã thanh khoản (mốc so sánh) H=15 (14185 lệnh)
+2026-10-25 11:39:04,500 Xong S1 Chỉ xu hướng (giá>MA50, RSI≥50) H=5 (23004 lệnh)
+2026-10-25 11:39:06,360 Xong S1 Chỉ xu hướng (giá>MA50, RSI≥50) H=10 (12879 lệnh)
+2026-10-25 11:39:07,803 Xong S1 Chỉ xu hướng (giá>MA50, RSI≥50) H=15 (9277 lệnh)
+2026-10-25 11:39:08,341 Xong S2 V2: top30 chất lượng + xu hướng H=5 (3459 lệnh)
+2026-10-25 11:39:08,606 Xong S2 V2: top30 chất lượng + xu hướng H=10 (2011 lệnh)
+2026-10-25 11:39:08,822 Xong S2 V2: top30 chất lượng + xu hướng H=15 (1495 lệnh)
+2026-10-25 11:39:08,986 Xong S3 V2 + mua nhịp chỉnh (≤MA20+0.5ATR) H=5 (1332 lệnh)
+2026-10-25 11:39:09,121 Xong S3 V2 + mua nhịp chỉnh (≤MA20+0.5ATR) H=10 (941 lệnh)
+2026-10-25 11:39:09,416 Xong S3 V2 + mua nhịp chỉnh (≤MA20+0.5ATR) H=15 (799 lệnh)
+2026-10-25 11:39:09,724 Xong S4 V2 + RSI 50–65 (chưa nóng) H=5 (2573 lệnh)
+2026-10-25 11:39:09,950 Xong S4 V2 + RSI 50–65 (chưa nóng) H=10 (1639 lệnh)
+2026-10-25 11:39:10,139 Xong S4 V2 + RSI 50–65 (chưa nóng) H=15 (1267 lệnh)
+2026-10-25 11:39:10,487 Xong S5 V2 + VNINDEX trên MA50 H=5 (2852 lệnh)
+2026-10-25 11:39:10,723 Xong S5 V2 + VNINDEX trên MA50 H=10 (1698 lệnh)
+2026-10-25 11:39:10,919 Xong S5 V2 + VNINDEX trên MA50 H=15 (1295 lệnh)
+2026-10-25 11:39:11,057 Xong S6 V2 + nhịp chỉnh + VNINDEX trên MA50 H=5 (1052 lệnh)
+2026-10-25 11:39:11,170 Xong S6 V2 + nhịp chỉnh + VNINDEX trên MA50 H=10 (761 lệnh)
+2026-10-25 11:39:11,274 Xong S6 V2 + nhịp chỉnh + VNINDEX trên MA50 H=15 (659 lệnh)
+2026-10-25 11:39:11,361 Xong sau 2449 giây
+==============================================================================================================
+NGHIÊN CỨU CLAUDE V3 – LƯỚT SÓNG, MỤC TIÊU ≥ 2%/LỆNH (đã trừ phí 0.4%)
+==============================================================================================================
+Development 2023 → 2026-04-23 | Holdout sau đó tới 2026-10-23
+ev = lãi TB/lệnh %, win = % lệnh có lãi, ge2 = % lệnh lãi ≥ 2%, tp_rate = % chạm chốt lời, hold = số phiên giữ TB, vni = VNINDEX cùng khoảng, alpha = hơn VNINDEX, alpha_t = độ tin cậy (>2 là có ý nghĩa)
+
+■ MỐC SO SÁNH – TẤT CẢ MÃ THANH KHOẢN (DEV)
+                                   set  H  tp  sl     n    ev  median   win   ge2  tp_rate  stop_rate  hold  vni  alpha  alpha_t
+S0 Tất cả mã thanh khoản (mốc so sánh) 15 6.0 NaN 12770  0.05    1.36 55.43 48.21    43.81        0.0 11.55 0.29  -0.24    -3.74
+S0 Tất cả mã thanh khoản (mốc so sánh) 15 5.0 NaN 12770  0.02    4.60 58.32 52.70    50.32        0.0 10.82 0.21  -0.19    -3.10
+S0 Tất cả mã thanh khoản (mốc so sánh) 15 4.0 NaN 12770 -0.00    3.60 62.51 58.61    57.86        0.0  9.91 0.11  -0.12    -1.98
+S0 Tất cả mã thanh khoản (mốc so sánh) 15 3.5 NaN 12770 -0.02    3.10 65.08 61.97    61.61        0.0  9.42 0.07  -0.09    -1.54
+S0 Tất cả mã thanh khoản (mốc so sánh) 15 3.0 NaN 12770 -0.05    2.60 67.85 65.72    65.61        0.0  8.89 0.02  -0.06    -1.11
+
+■ TOP 15 LUẬT ĐẠT ĐIỀU KIỆN TRÊN DEVELOPMENT (thắng ≥55%, lãi >0 cả 3 năm, H ≤ 10, chốt ≥ +2.5%)
+                               set  H  tp  sl    n   ev  median   win   ge2  tp_rate  stop_rate  hold   vni  alpha  alpha_t  ev2023  ev2024  ev2025
+S2 V2: top30 chất lượng + xu hướng 10 4.0 NaN 1797 0.23    1.00 55.26 46.91    45.30        0.0  7.78 -0.13   0.36     3.19    0.37    0.51    0.06
+S2 V2: top30 chất lượng + xu hướng 10 3.5 NaN 1797 0.21    2.36 56.98 50.19    49.53        0.0  7.48 -0.13   0.34     3.07    0.28    0.55    0.02
+
+■ LUẬT ĐƯỢC CHỌN (khóa từ Development):
+  S2 V2: top30 chất lượng + xu hướng | giữ tối đa 10 phiên | chốt +4.0% | cắt lỗ không
+  DEV    : n=1797.00, ev=0.23, median=1.00, win=55.26, ge2=46.91, tp_rate=45.30, stop_rate=0.00, hold=7.78, vni=-0.13, alpha=0.36, alpha_t=3.19
+  HOLDOUT: n=214.00, ev=-0.16, median=0.09, win=50.00, ge2=39.25, tp_rate=38.32, stop_rate=0.00, hold=8.07, vni=-1.10, alpha=0.94, alpha_t=3.04
+  Mốc S0 cùng luật DEV: ev=-0.14, win=57.34, alpha=-0.14
+  Mốc S0 cùng luật HOLDOUT: ev=-1.36, win=45.48, alpha=-0.39
+  ➜ Holdout: KHÔNG ĐẠT (cần lãi TB > 0, hơn VNINDEX, và hơn mốc S0 cùng luật ở cả DEV lẫn HOLDOUT)
+
+■ 10 LUẬT ĐẦU TRÊN HOLDOUT (chỉ để xem, KHÔNG dùng để chọn lại):
+                               set  H  tp  sl  dev_ev  dev_win  hold_n  hold_ev  hold_win  hold_alpha
+S2 V2: top30 chất lượng + xu hướng 10 4.0 NaN    0.23    55.26     214    -0.16     50.00        0.94
+S2 V2: top30 chất lượng + xu hướng 10 3.5 NaN    0.21    56.98     214    -0.02     53.74        1.01
+
+■ TỐT NHẤT MỖI BỘ LỌC (DEV, H ≤ 10, chốt ≥ +2.5%, xếp theo lãi TB)
+                                   set  H  tp  sl     n    ev  median   win   ge2  tp_rate  stop_rate  hold   vni  alpha  alpha_t
+    S2 V2: top30 chất lượng + xu hướng 10 6.0 NaN  1797  0.33    0.10 50.81 38.29    30.88        0.0  8.62 -0.02   0.35     2.93
+         S4 V2 + RSI 50–65 (chưa nóng) 10 6.0 NaN  1456  0.27    0.03 50.34 37.91    30.15        0.0  8.66 -0.09   0.36     2.84
+             S5 V2 + VNINDEX trên MA50 10 6.0 NaN  1554  0.26    0.02 50.13 37.77    30.44        0.0  8.67 -0.03   0.29     2.28
+ S3 V2 + mua nhịp chỉnh (≤MA20+0.5ATR) 10 6.0 NaN   837  0.14   -0.08 49.46 35.48    28.08        0.0  8.77 -0.08   0.22     1.36
+S6 V2 + nhịp chỉnh + VNINDEX trên MA50 10 6.0 NaN   690  0.03   -0.27 47.54 34.20    27.83        0.0  8.79 -0.19   0.23     1.24
+    S1 Chỉ xu hướng (giá>MA50, RSI≥50) 10 5.0 NaN 11905 -0.11    0.91 53.77 46.38    43.41        0.0  7.89 -0.06  -0.06    -1.00
+S0 Tất cả mã thanh khoản (mốc so sánh) 10 6.0 NaN 18802 -0.13    0.26 51.44 41.12    35.46        0.0  8.39  0.07  -0.20    -4.55
