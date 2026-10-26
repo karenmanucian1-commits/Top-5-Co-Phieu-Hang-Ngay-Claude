@@ -1,8 +1,4 @@
-2026-10-26 06:05:35,841 WARNING Vietcap lỗi danh sách mã (Gọi API thất bại: https://trading.vietcap.com.vn/api/price/symbols/getAll -> HTT) -> dùng bản đã lưu (1519 mã)
-2026-10-26 06:05:39,246 INFO Đã tải giá 1/1 mã từ KBS (lỗi 0, 2s)
-2026-10-26 06:05:39,259 INFO Dùng lại giá đã tải (KBS): 241 mã, cần tải thêm 2 mã
-2026-10-26 06:05:40,317 INFO Đã tải giá 2/2 mã từ KBS (lỗi 2, 1s)
-2026-10-26 06:05:40,317 INFO Thử lại 2 mã lỗi: ITA, PSH
-2026-10-26 06:05:40,855 WARNING Thiếu dữ liệu 2 mã: ITA, PSH
-2026-10-26 06:05:40,874 INFO Tải giá 241 mã
-2026-10-26 06:05:41,542 INFO Qua lọc thanh khoản: 187 mã
+2026-10-26 11:37:47,039 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-10-26 11:37:47,073 INFO Dùng lại giá đã tải (Vietcap): 243 mã, cần tải thêm 0 mã
+2026-10-26 11:37:47,112 INFO Tải giá 243 mã
+2026-10-26 11:37:48,012 INFO Qua lọc thanh khoản: 187 mã
