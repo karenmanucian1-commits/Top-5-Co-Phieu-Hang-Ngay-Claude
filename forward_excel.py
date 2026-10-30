@@ -323,7 +323,7 @@ def run(do_upload=False, client=vci, now=None):
     for s in prices:
         prices[s]["date"] = pd.to_datetime(prices[s]["date"])
     res = build_rows(prices, idx)
-    name = f"Kiem dinh CLAUDE BOT {now:%Y-%m-%d}.xlsx"
+    name = "Kiem dinh CLAUDE BOT.xlsx"          # 1 file duy nhất, cập nhật đè mỗi ngày
     path = make_excel(res, now, os.path.join(D, "reports", name))
     res.drop(columns=[c for c in res.columns if c.startswith("_")], errors="ignore") \
        .to_csv(os.path.join(D, "forward_test.csv"), index=False, encoding="utf-8-sig")
