@@ -1,0 +1,63 @@
+==============================================================================================================
+NGHIÊN CỨU CLAUDE V4 – ÍT LỆNH, TỶ LỆ THẮNG CAO
+==============================================================================================================
+Số cấu hình đã thử: 1104 | Development 2023 → 2026-04-23 | Holdout sau đó
+win = % lệnh lãi sau phí, ev = lãi TB/lệnh %, per_month = số lệnh/tháng, worst = lệnh lỗ nặng nhất, alpha = hơn VNINDEX
+
+■ MỐC: MUA ĐẠI MỌI MÃ THANH KHOẢN (DEV)
+                           set mode  H  tp   sl    n  per_month   win   ev  median  worst  vni  alpha
+S0 Tất cả mã thanh khoản (mốc)  all 20 4.0  NaN 9474     236.85 67.43 0.19     3.6 -84.57 0.49  -0.30
+S0 Tất cả mã thanh khoản (mốc)  all 20 4.0 10.0 9474     236.85 65.98 0.07     3.6 -36.64 0.36  -0.29
+S0 Tất cả mã thanh khoản (mốc)  all 20 4.0  7.0 9474     236.85 63.73 0.03     3.6 -36.64 0.33  -0.30
+
+■ CÁC LUẬT ĐẠT ĐIỀU KIỆN TRÊN DEVELOPMENT: 7
+                                                             set mode  H  tp   sl  n  per_month  win  ev  median  worst  vni  alpha  win2023  win2024  win2025
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 5.0  NaN 37        0.9 73.0 1.1     4.6  -12.1 -0.1    1.2     77.8     66.7     83.3
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0  NaN 37        0.9 70.3 2.3     3.9  -12.1  0.4    1.8     77.8     66.7     75.0
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 6.0  NaN 37        0.9 70.3 1.5     5.6  -12.1  0.1    1.4     77.8     66.7     75.0
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0 10.0 37        0.9 67.6 1.5     3.9  -21.8  0.2    1.4     66.7     66.7     75.0
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0  7.0 37        0.9 64.9 1.1     3.3  -14.4  0.4    0.7     66.7     66.7     66.7
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0  5.0 37        0.9 62.2 1.3     3.3  -14.4  0.4    0.9     66.7     66.7     58.3
+I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt top1 10 8.0  5.0 39        1.0 56.4 1.2     0.4  -10.1  0.1    1.1     66.7     57.1     61.5
+
+■ LUẬT ĐƯỢC CHỌN (khóa từ Development):
+  H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | mỗi ngày 1 mã tốt nhất | giữ tối đa 20 phiên | chốt +5% | cắt lỗ không
+  DEV    : n=37.00, per_month=0.93, win=72.97, ev=1.13, median=4.60, worst=-12.06, vni=-0.12, alpha=1.24
+  Mốc mua đại cùng luật thoát DEV: win=63.1, ev=0.21
+  Mốc mua đại cùng luật thoát HOLDOUT: win=52.3, ev=-1.22
+  HOLDOUT: n=5.00, per_month=0.83, win=60.00, ev=0.15, median=4.60, worst=-7.79, vni=-1.84, alpha=1.99
+  ➜ HOLDOUT ĐẠT (cần thắng ≥60%, lãi TB >0, hơn VNINDEX)
+
+■ 10 LUẬT ĐẦU TRÊN HOLDOUT (chỉ để xem, KHÔNG chọn lại):
+                                     set mode  H  tp   sl  dev_n  dev_win  dev_ev  hold_n  hold_win  hold_ev  hold_alpha
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 5.0  NaN     37     73.0     1.1       5      60.0      0.1         2.0
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0  NaN     37     70.3     2.3       5      60.0      0.6         2.2
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 6.0  NaN     37     70.3     1.5       5      60.0      0.7         1.8
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0 10.0     37     67.6     1.5       5      60.0      0.6         2.2
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0  7.0     37     64.9     1.1       5      60.0      0.6         2.1
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0  5.0     37     62.2     1.3       5      60.0      0.8         1.6
+
+■ TỶ LỆ THẮNG CAO NHẤT MỖI BỘ LỌC (DEV, n ≥ 20, lãi TB > 0)
+                                                             set mode  H  tp   sl    n  per_month  win  ev  median  worst  vni  alpha
+                       C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 top1 20 4.0 10.0   34        0.8 82.4 2.3     3.6   -6.9  0.4    2.0
+           A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt top1 20 5.0  NaN   23        0.6 78.3 1.5     4.6  -14.4 -0.7    2.2
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 4.0  NaN   37        0.9 75.7 0.8     3.6  -12.1 -0.2    1.0
+         K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt top1 15 4.0  NaN   31        0.8 74.2 1.6     3.6  -10.1 -0.3    2.0
+                     D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt top1 20 4.0  7.0   23        0.6 73.9 1.3     3.6   -8.2  0.4    0.9
+             J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt top1 20 5.0  7.0   22        0.6 72.7 1.2     4.6  -17.6 -0.4    1.5
+                    B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt top1 20 4.0  7.0   21        0.5 71.4 1.8     3.6   -4.4  1.0    0.7
+                     D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt  all 20 4.0  NaN 1529       38.2 70.1 0.2     3.6  -53.7 -0.1    0.3
+                G Top10 + xu hướng đủ + biến động thấp + VNI tốt top1 20 5.0  NaN   23        0.6 69.6 1.4     4.6   -9.0 -0.7    2.1
+I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt top1 15 4.0  5.0   28        0.7 67.9 1.0     3.6   -7.2  0.6    0.4
+                                  S0 Tất cả mã thanh khoản (mốc)  all 20 4.0  NaN 9474      236.8 67.4 0.2     3.6  -84.6  0.5   -0.3
+     F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70  all 20 4.0  NaN  238        6.0 66.4 0.5     3.6  -29.9  0.0    0.4
+                G Top10 + xu hướng đủ + biến động thấp + VNI tốt  all 20 4.0  NaN  158        4.0 65.2 0.7     3.6  -17.5  0.0    0.7
+                         E Mã lớn + Top30 + nhịp chỉnh + VNI tốt  all 20 4.0  NaN  311        7.8 65.0 0.3     3.6  -30.5 -0.1    0.5
+                       C Top20 + xu hướng đủ + ADX≥25 + RSI50-65  all 20 4.0  NaN  327        8.2 64.5 0.5     3.6  -39.4 -0.3    0.8
+           A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt  all 20 4.0  NaN  153        3.8 62.1 0.0     3.6  -32.5 -0.2    0.3
+     F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 top1 15 4.0 10.0   42        1.0 61.9 0.2     3.6  -36.6 -0.1    0.3
+         K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt  all 20 5.0  NaN  223        5.6 61.4 0.1     4.6  -32.9 -0.7    0.8
+I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt  all 20 5.0  NaN  186        4.6 60.8 0.1     4.6  -36.7 -0.5    0.6
+             J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt  all 20 6.0  NaN  143        3.6 56.6 0.0     2.1  -39.4 -0.4    0.4
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh  all 20 8.0  NaN 1206       30.2 56.1 0.0     2.2  -53.7  0.3   -0.3
+                         E Mã lớn + Top30 + nhịp chỉnh + VNI tốt top1 20 8.0  5.0   22        0.6 50.0 0.1    -0.5  -13.8  0.7   -0.6

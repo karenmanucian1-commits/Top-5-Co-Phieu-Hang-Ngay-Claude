@@ -1,0 +1,179 @@
+2026-11-17 21:54:55,204 Nguồn dữ liệu giá cho lượt chạy này: Vietcap
+2026-11-17 21:54:55,761 Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-17 21:54:55,762 Tải 1100 phiên cho 1517 mã...
+2026-11-17 21:55:21,995 Đã tải giá 50/1517 mã từ Vietcap (lỗi 0, 26s)
+2026-11-17 21:55:48,287 Đã tải giá 100/1517 mã từ Vietcap (lỗi 0, 53s)
+2026-11-17 21:56:15,104 Đã tải giá 150/1517 mã từ Vietcap (lỗi 0, 79s)
+2026-11-17 21:56:41,245 Đã tải giá 200/1517 mã từ Vietcap (lỗi 1, 105s)
+2026-11-17 21:57:07,843 Đã tải giá 250/1517 mã từ Vietcap (lỗi 1, 132s)
+2026-11-17 21:57:34,829 Đã tải giá 300/1517 mã từ Vietcap (lỗi 1, 159s)
+2026-11-17 21:58:01,422 Đã tải giá 350/1517 mã từ Vietcap (lỗi 1, 186s)
+2026-11-17 21:58:27,924 Đã tải giá 400/1517 mã từ Vietcap (lỗi 1, 212s)
+2026-11-17 21:58:54,527 Đã tải giá 450/1517 mã từ Vietcap (lỗi 1, 239s)
+2026-11-17 21:59:21,283 Đã tải giá 500/1517 mã từ Vietcap (lỗi 1, 266s)
+2026-11-17 21:59:47,833 Đã tải giá 550/1517 mã từ Vietcap (lỗi 1, 292s)
+2026-11-17 22:00:14,671 Đã tải giá 600/1517 mã từ Vietcap (lỗi 1, 319s)
+2026-11-17 22:00:41,428 Đã tải giá 650/1517 mã từ Vietcap (lỗi 1, 346s)
+2026-11-17 22:01:08,152 Đã tải giá 700/1517 mã từ Vietcap (lỗi 1, 372s)
+2026-11-17 22:01:34,946 Đã tải giá 750/1517 mã từ Vietcap (lỗi 1, 399s)
+2026-11-17 22:02:01,486 Đã tải giá 800/1517 mã từ Vietcap (lỗi 1, 426s)
+2026-11-17 22:02:28,045 Đã tải giá 850/1517 mã từ Vietcap (lỗi 1, 452s)
+2026-11-17 22:02:54,706 Đã tải giá 900/1517 mã từ Vietcap (lỗi 1, 479s)
+2026-11-17 22:03:21,451 Đã tải giá 950/1517 mã từ Vietcap (lỗi 1, 506s)
+2026-11-17 22:03:48,368 Đã tải giá 1000/1517 mã từ Vietcap (lỗi 1, 533s)
+2026-11-17 22:04:15,055 Đã tải giá 1050/1517 mã từ Vietcap (lỗi 1, 559s)
+2026-11-17 22:04:41,490 Đã tải giá 1100/1517 mã từ Vietcap (lỗi 1, 586s)
+2026-11-17 22:05:08,016 Đã tải giá 1150/1517 mã từ Vietcap (lỗi 1, 612s)
+2026-11-17 22:05:34,561 Đã tải giá 1200/1517 mã từ Vietcap (lỗi 1, 639s)
+2026-11-17 22:06:01,111 Đã tải giá 1250/1517 mã từ Vietcap (lỗi 1, 665s)
+2026-11-17 22:06:27,851 Đã tải giá 1300/1517 mã từ Vietcap (lỗi 1, 692s)
+2026-11-17 22:06:54,175 Đã tải giá 1350/1517 mã từ Vietcap (lỗi 1, 718s)
+2026-11-17 22:07:20,480 Đã tải giá 1400/1517 mã từ Vietcap (lỗi 1, 745s)
+2026-11-17 22:07:46,885 Đã tải giá 1450/1517 mã từ Vietcap (lỗi 1, 771s)
+2026-11-17 22:08:13,789 Đã tải giá 1500/1517 mã từ Vietcap (lỗi 1, 798s)
+2026-11-17 22:08:22,769 Đã tải giá 1517/1517 mã từ Vietcap (lỗi 1, 807s)
+2026-11-17 22:08:22,769 Thử lại 1 mã lỗi: UTT
+2026-11-17 22:08:23,006 Thiếu dữ liệu 1 mã: UTT
+2026-11-17 22:13:08,681 Đã xử lý tới 2023-06-02
+2026-11-17 22:14:55,008 Đã xử lý tới 2023-10-24
+2026-11-17 22:15:16,181 Đã xử lý tới 2024-03-20
+2026-11-17 22:16:03,582 Đã xử lý tới 2024-08-13
+2026-11-17 22:16:26,169 Đã xử lý tới 2025-01-03
+2026-11-17 22:17:03,064 Đã xử lý tới 2025-06-05
+2026-11-17 22:17:26,632 Đã xử lý tới 2025-10-27
+2026-11-17 22:17:59,330 Đã xử lý tới 2026-03-25
+2026-11-17 22:18:16,060 Đã xử lý tới 2026-08-17
+2026-11-17 22:18:23,175 205205 dòng mã-ngày
+2026-11-17 22:18:24,596 Xong S0 Tất cả mã thanh khoản (mốc) | all | H=10 | 20961 lệnh
+2026-11-17 22:18:25,706 Xong S0 Tất cả mã thanh khoản (mốc) | all | H=15 | 14158 lệnh
+2026-11-17 22:18:26,720 Xong S0 Tất cả mã thanh khoản (mốc) | all | H=20 | 10666 lệnh
+2026-11-17 22:18:26,744 Xong A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt | all | H=10 | 213 lệnh
+2026-11-17 22:18:26,757 Xong A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt | all | H=15 | 181 lệnh
+2026-11-17 22:18:26,769 Xong A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt | all | H=20 | 162 lệnh
+2026-11-17 22:18:26,776 Xong A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt | top1 | H=10 | 44 lệnh
+2026-11-17 22:18:26,780 Xong A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt | top1 | H=15 | 30 lệnh
+2026-11-17 22:18:26,785 Xong A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt | top1 | H=20 | 26 lệnh
+2026-11-17 22:18:26,795 Xong B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt | all | H=10 | 125 lệnh
+2026-11-17 22:18:26,804 Xong B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt | all | H=15 | 118 lệnh
+2026-11-17 22:18:26,814 Xong B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt | all | H=20 | 113 lệnh
+2026-11-17 22:18:26,819 Xong B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt | top1 | H=10 | 38 lệnh
+2026-11-17 22:18:26,824 Xong B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt | top1 | H=15 | 29 lệnh
+2026-11-17 22:18:26,828 Xong B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt | top1 | H=20 | 24 lệnh
+2026-11-17 22:18:26,857 Xong C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 | all | H=10 | 508 lệnh
+2026-11-17 22:18:26,881 Xong C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 | all | H=15 | 407 lệnh
+2026-11-17 22:18:26,905 Xong C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 | all | H=20 | 357 lệnh
+2026-11-17 22:18:26,915 Xong C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 | top1 | H=10 | 73 lệnh
+2026-11-17 22:18:26,922 Xong C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 | top1 | H=15 | 47 lệnh
+2026-11-17 22:18:26,929 Xong C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 | top1 | H=20 | 39 lệnh
+2026-11-17 22:18:27,051 Xong D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt | all | H=10 | 2403 lệnh
+2026-11-17 22:18:27,147 Xong D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt | all | H=15 | 1869 lệnh
+2026-11-17 22:18:27,231 Xong D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt | all | H=20 | 1579 lệnh
+2026-11-17 22:18:27,239 Xong D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt | top1 | H=10 | 46 lệnh
+2026-11-17 22:18:27,244 Xong D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt | top1 | H=15 | 32 lệnh
+2026-11-17 22:18:27,249 Xong D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt | top1 | H=20 | 26 lệnh
+2026-11-17 22:18:27,273 Xong E Mã lớn + Top30 + nhịp chỉnh + VNI tốt | all | H=10 | 436 lệnh
+2026-11-17 22:18:27,295 Xong E Mã lớn + Top30 + nhịp chỉnh + VNI tốt | all | H=15 | 359 lệnh
+2026-11-17 22:18:27,316 Xong E Mã lớn + Top30 + nhịp chỉnh + VNI tốt | all | H=20 | 332 lệnh
+2026-11-17 22:18:27,324 Xong E Mã lớn + Top30 + nhịp chỉnh + VNI tốt | top1 | H=10 | 44 lệnh
+2026-11-17 22:18:27,329 Xong E Mã lớn + Top30 + nhịp chỉnh + VNI tốt | top1 | H=15 | 32 lệnh
+2026-11-17 22:18:27,334 Xong E Mã lớn + Top30 + nhịp chỉnh + VNI tốt | top1 | H=20 | 25 lệnh
+2026-11-17 22:18:27,357 Xong F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 | all | H=10 | 386 lệnh
+2026-11-17 22:18:27,377 Xong F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 | all | H=15 | 298 lệnh
+2026-11-17 22:18:27,394 Xong F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 | all | H=20 | 251 lệnh
+2026-11-17 22:18:27,403 Xong F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 | top1 | H=10 | 76 lệnh
+2026-11-17 22:18:27,409 Xong F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 | top1 | H=15 | 49 lệnh
+2026-11-17 22:18:27,415 Xong F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 | top1 | H=20 | 38 lệnh
+2026-11-17 22:18:27,431 Xong G Top10 + xu hướng đủ + biến động thấp + VNI tốt | all | H=10 | 234 lệnh
+2026-11-17 22:18:27,444 Xong G Top10 + xu hướng đủ + biến động thấp + VNI tốt | all | H=15 | 187 lệnh
+2026-11-17 22:18:27,457 Xong G Top10 + xu hướng đủ + biến động thấp + VNI tốt | all | H=20 | 164 lệnh
+2026-11-17 22:18:27,464 Xong G Top10 + xu hướng đủ + biến động thấp + VNI tốt | top1 | H=10 | 42 lệnh
+2026-11-17 22:18:27,468 Xong G Top10 + xu hướng đủ + biến động thấp + VNI tốt | top1 | H=15 | 29 lệnh
+2026-11-17 22:18:27,473 Xong G Top10 + xu hướng đủ + biến động thấp + VNI tốt | top1 | H=20 | 25 lệnh
+2026-11-17 22:18:27,824 Xong H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | all | H=10 | 1721 lệnh
+2026-11-17 22:18:27,900 Xong H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | all | H=15 | 1450 lệnh
+2026-11-17 22:18:27,971 Xong H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | all | H=20 | 1274 lệnh
+2026-11-17 22:18:27,982 Xong H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | top1 | H=10 | 82 lệnh
+2026-11-17 22:18:27,990 Xong H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | top1 | H=15 | 55 lệnh
+2026-11-17 22:18:27,997 Xong H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | top1 | H=20 | 42 lệnh
+2026-11-17 22:18:28,012 Xong I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt | all | H=10 | 230 lệnh
+2026-11-17 22:18:28,026 Xong I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt | all | H=15 | 210 lệnh
+2026-11-17 22:18:28,039 Xong I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt | all | H=20 | 195 lệnh
+2026-11-17 22:18:28,046 Xong I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt | top1 | H=10 | 43 lệnh
+2026-11-17 22:18:28,051 Xong I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt | top1 | H=15 | 31 lệnh
+2026-11-17 22:18:28,056 Xong I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt | top1 | H=20 | 26 lệnh
+2026-11-17 22:18:28,071 Xong J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt | all | H=10 | 198 lệnh
+2026-11-17 22:18:28,083 Xong J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt | all | H=15 | 170 lệnh
+2026-11-17 22:18:28,095 Xong J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt | all | H=20 | 152 lệnh
+2026-11-17 22:18:28,102 Xong J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt | top1 | H=10 | 46 lệnh
+2026-11-17 22:18:28,108 Xong J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt | top1 | H=15 | 32 lệnh
+2026-11-17 22:18:28,113 Xong J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt | top1 | H=20 | 25 lệnh
+2026-11-17 22:18:28,135 Xong K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt | all | H=10 | 354 lệnh
+2026-11-17 22:18:28,155 Xong K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt | all | H=15 | 275 lệnh
+2026-11-17 22:18:28,172 Xong K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt | all | H=20 | 232 lệnh
+2026-11-17 22:18:28,178 Xong K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt | top1 | H=10 | 46 lệnh
+2026-11-17 22:18:28,183 Xong K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt | top1 | H=15 | 34 lệnh
+2026-11-17 22:18:28,188 Xong K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt | top1 | H=20 | 25 lệnh
+2026-11-17 22:18:28,244 Xong sau 1417 giây
+==============================================================================================================
+NGHIÊN CỨU CLAUDE V4 – ÍT LỆNH, TỶ LỆ THẮNG CAO
+==============================================================================================================
+Số cấu hình đã thử: 1104 | Development 2023 → 2026-04-23 | Holdout sau đó
+win = % lệnh lãi sau phí, ev = lãi TB/lệnh %, per_month = số lệnh/tháng, worst = lệnh lỗ nặng nhất, alpha = hơn VNINDEX
+
+■ MỐC: MUA ĐẠI MỌI MÃ THANH KHOẢN (DEV)
+                           set mode  H  tp   sl    n  per_month   win   ev  median  worst  vni  alpha
+S0 Tất cả mã thanh khoản (mốc)  all 20 4.0  NaN 9474     236.85 67.43 0.19     3.6 -84.57 0.49  -0.30
+S0 Tất cả mã thanh khoản (mốc)  all 20 4.0 10.0 9474     236.85 65.98 0.07     3.6 -36.64 0.36  -0.29
+S0 Tất cả mã thanh khoản (mốc)  all 20 4.0  7.0 9474     236.85 63.73 0.03     3.6 -36.64 0.33  -0.30
+
+■ CÁC LUẬT ĐẠT ĐIỀU KIỆN TRÊN DEVELOPMENT: 7
+                                                             set mode  H  tp   sl  n  per_month  win  ev  median  worst  vni  alpha  win2023  win2024  win2025
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 5.0  NaN 37        0.9 73.0 1.1     4.6  -12.1 -0.1    1.2     77.8     66.7     83.3
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0  NaN 37        0.9 70.3 2.3     3.9  -12.1  0.4    1.8     77.8     66.7     75.0
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 6.0  NaN 37        0.9 70.3 1.5     5.6  -12.1  0.1    1.4     77.8     66.7     75.0
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0 10.0 37        0.9 67.6 1.5     3.9  -21.8  0.2    1.4     66.7     66.7     75.0
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0  7.0 37        0.9 64.9 1.1     3.3  -14.4  0.4    0.7     66.7     66.7     66.7
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 8.0  5.0 37        0.9 62.2 1.3     3.3  -14.4  0.4    0.9     66.7     66.7     58.3
+I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt top1 10 8.0  5.0 39        1.0 56.4 1.2     0.4  -10.1  0.1    1.1     66.7     57.1     61.5
+
+■ LUẬT ĐƯỢC CHỌN (khóa từ Development):
+  H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh | mỗi ngày 1 mã tốt nhất | giữ tối đa 20 phiên | chốt +5% | cắt lỗ không
+  DEV    : n=37.00, per_month=0.93, win=72.97, ev=1.13, median=4.60, worst=-12.06, vni=-0.12, alpha=1.24
+  Mốc mua đại cùng luật thoát DEV: win=63.1, ev=0.21
+  Mốc mua đại cùng luật thoát HOLDOUT: win=52.3, ev=-1.22
+  HOLDOUT: n=5.00, per_month=0.83, win=60.00, ev=0.15, median=4.60, worst=-7.79, vni=-1.84, alpha=1.99
+  ➜ HOLDOUT ĐẠT (cần thắng ≥60%, lãi TB >0, hơn VNINDEX)
+
+■ 10 LUẬT ĐẦU TRÊN HOLDOUT (chỉ để xem, KHÔNG chọn lại):
+                                     set mode  H  tp   sl  dev_n  dev_win  dev_ev  hold_n  hold_win  hold_ev  hold_alpha
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 5.0  NaN     37     73.0     1.1       5      60.0      0.1         2.0
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0  NaN     37     70.3     2.3       5      60.0      0.6         2.2
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 6.0  NaN     37     70.3     1.5       5      60.0      0.7         1.8
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0 10.0     37     67.6     1.5       5      60.0      0.6         2.2
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0  7.0     37     64.9     1.1       5      60.0      0.6         2.1
+H Mã lớn + xu hướng đủ + mạnh hơn VNI +  top1 20 8.0  5.0     37     62.2     1.3       5      60.0      0.8         1.6
+
+■ TỶ LỆ THẮNG CAO NHẤT MỖI BỘ LỌC (DEV, n ≥ 20, lãi TB > 0)
+                                                             set mode  H  tp   sl    n  per_month  win  ev  median  worst  vni  alpha
+                       C Top20 + xu hướng đủ + ADX≥25 + RSI50-65 top1 20 4.0 10.0   34        0.8 82.4 2.3     3.6   -6.9  0.4    2.0
+           A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt top1 20 5.0  NaN   23        0.6 78.3 1.5     4.6  -14.4 -0.7    2.2
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh top1 20 4.0  NaN   37        0.9 75.7 0.8     3.6  -12.1 -0.2    1.0
+         K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt top1 15 4.0  NaN   31        0.8 74.2 1.6     3.6  -10.1 -0.3    2.0
+                     D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt top1 20 4.0  7.0   23        0.6 73.9 1.3     3.6   -8.2  0.4    0.9
+             J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt top1 20 5.0  7.0   22        0.6 72.7 1.2     4.6  -17.6 -0.4    1.5
+                    B Top10 + xu hướng đủ + nhịp chỉnh + VNI tốt top1 20 4.0  7.0   21        0.5 71.4 1.8     3.6   -4.4  1.0    0.7
+                     D Mã lớn + xu hướng đủ + RSI50-65 + VNI tốt  all 20 4.0  NaN 1529       38.2 70.1 0.2     3.6  -53.7 -0.1    0.3
+                G Top10 + xu hướng đủ + biến động thấp + VNI tốt top1 20 5.0  NaN   23        0.6 69.6 1.4     4.6   -9.0 -0.7    2.1
+I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt top1 15 4.0  5.0   28        0.7 67.9 1.0     3.6   -7.2  0.6    0.4
+                                  S0 Tất cả mã thanh khoản (mốc)  all 20 4.0  NaN 9474      236.8 67.4 0.2     3.6  -84.6  0.5   -0.3
+     F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70  all 20 4.0  NaN  238        6.0 66.4 0.5     3.6  -29.9  0.0    0.4
+                G Top10 + xu hướng đủ + biến động thấp + VNI tốt  all 20 4.0  NaN  158        4.0 65.2 0.7     3.6  -17.5  0.0    0.7
+                         E Mã lớn + Top30 + nhịp chỉnh + VNI tốt  all 20 4.0  NaN  311        7.8 65.0 0.3     3.6  -30.5 -0.1    0.5
+                       C Top20 + xu hướng đủ + ADX≥25 + RSI50-65  all 20 4.0  NaN  327        8.2 64.5 0.5     3.6  -39.4 -0.3    0.8
+           A Top10 chất lượng + xu hướng đủ + RSI50-65 + VNI tốt  all 20 4.0  NaN  153        3.8 62.1 0.0     3.6  -32.5 -0.2    0.3
+     F Top10 + gần đỉnh 52 tuần + mạnh hơn VNI 60 phiên + RSI≤70 top1 15 4.0 10.0   42        1.0 61.9 0.2     3.6  -36.6 -0.1    0.3
+         K Mã lớn + Top20 + xu hướng đủ + mạnh hơn VNI + VNI tốt  all 20 5.0  NaN  223        5.6 61.4 0.1     4.6  -32.9 -0.7    0.8
+I Mã lớn + Top30 + xu hướng đủ + RSI50-65 + nhịp chỉnh + VNI tốt  all 20 5.0  NaN  186        4.6 60.8 0.1     4.6  -36.7 -0.5    0.6
+             J Top10 + xu hướng đủ + RSI50-65 + ADX≥25 + VNI tốt  all 20 6.0  NaN  143        3.6 56.6 0.0     2.1  -39.4 -0.4    0.4
+              H Mã lớn + xu hướng đủ + mạnh hơn VNI + nhịp chỉnh  all 20 8.0  NaN 1206       30.2 56.1 0.0     2.2  -53.7  0.3   -0.3
+                         E Mã lớn + Top30 + nhịp chỉnh + VNI tốt top1 20 8.0  5.0   22        0.6 50.0 0.1    -0.5  -13.8  0.7   -0.6
