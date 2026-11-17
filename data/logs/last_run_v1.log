@@ -1,11 +1,11 @@
-2026-11-17 06:00:44,739 INFO Tổng số mã: 1517
-2026-11-17 06:00:46,889 INFO Nguồn dữ liệu giá cho lượt chạy này: Vietcap
-2026-11-17 06:00:47,841 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
-2026-11-17 06:00:47,846 INFO Dùng danh sách thanh khoản đã lưu: tải giá 240 mã
-2026-11-17 06:01:22,338 INFO Đã tải giá 50/240 mã từ Vietcap (lỗi 0, 34s)
-2026-11-17 06:01:55,585 INFO Đã tải giá 100/240 mã từ Vietcap (lỗi 0, 68s)
-2026-11-17 06:02:36,615 INFO Đã tải giá 150/240 mã từ Vietcap (lỗi 0, 109s)
-2026-11-17 06:03:14,350 INFO Đã tải giá 200/240 mã từ Vietcap (lỗi 0, 147s)
-2026-11-17 06:03:39,627 INFO Đã tải giá 240/240 mã từ Vietcap (lỗi 0, 172s)
-2026-11-17 06:03:39,643 INFO Tải được giá 240 mã
-2026-11-17 06:03:40,514 INFO Thanh khoản: 186 | Xu hướng tăng: 62
+2026-11-17 11:35:32,831 INFO Tổng số mã: 1517
+2026-11-17 11:35:34,305 INFO Nguồn dữ liệu giá cho lượt chạy này: Vietcap
+2026-11-17 11:35:34,859 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-17 11:35:34,865 INFO Dùng danh sách thanh khoản đã lưu: tải giá 240 mã
+2026-11-17 11:36:02,801 INFO Đã tải giá 50/240 mã từ Vietcap (lỗi 0, 28s)
+2026-11-17 11:36:30,839 INFO Đã tải giá 100/240 mã từ Vietcap (lỗi 0, 56s)
+2026-11-17 11:36:59,015 INFO Đã tải giá 150/240 mã từ Vietcap (lỗi 0, 84s)
+2026-11-17 11:37:27,639 INFO Đã tải giá 200/240 mã từ Vietcap (lỗi 0, 113s)
+2026-11-17 11:37:50,060 INFO Đã tải giá 240/240 mã từ Vietcap (lỗi 0, 135s)
+2026-11-17 11:37:50,075 INFO Tải được giá 240 mã
+2026-11-17 11:37:50,966 INFO Thanh khoản: 186 | Xu hướng tăng: 55
