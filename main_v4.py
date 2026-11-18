@@ -79,7 +79,7 @@ def check_open(pos, df, now):
             px = max(tp_px, float(after["open"].iloc[j]))
             ret = (px / entry - 1 - FEE) * 100
             d = pd.Timestamp(after["date"].iloc[j]).date()
-            return (f"✅ <b>CLAUDE BOT V4 – CHỐT LỜI {pos['symbol']}</b>\n"
+            return (f"✅ <b>CLAUDE BOT V4 – CHỐT LỜI: {pos['symbol']}</b>\n"
                     f"Giá chạm mốc +5% ({fmt(tp_px)}) phiên {d:%d/%m/%Y}.\n"
                     f"Mua {fmt(entry)} ngày {pd.Timestamp(pos['entry_date']):%d/%m} → bán {fmt(px)}: "
                     f"<b>{ret:+.1f}%</b> sau phí.\n"
@@ -89,7 +89,7 @@ def check_open(pos, df, now):
         px = float(after["close"].iloc[HOLD - 1])
         ret = (px / entry - 1 - FEE) * 100
         d = pd.Timestamp(after["date"].iloc[HOLD - 1]).date()
-        return (f"⏰ <b>CLAUDE BOT V4 – HẾT 20 PHIÊN, BÁN {pos['symbol']}</b>\n"
+        return (f"🔴 <b>CLAUDE BOT V4 – BÁN: {pos['symbol']}</b> (hết 20 phiên)\n"
                 f"Chưa chạm mốc +5% sau 20 phiên. Bán hôm nay (giá đóng cửa {d:%d/%m}: {fmt(px)}).\n"
                 f"Mua {fmt(entry)} → {fmt(px)}: <b>{ret:+.1f}%</b> sau phí."), dict(pos, closed="TIME", exit=round(px, 2),
                                                                               exit_date=str(d), ret=round(ret, 2))
@@ -150,17 +150,27 @@ def run(dry=False, now=None):
         if best:
             f = best["f"]
             p = f["price"]
-            msgs.append(
-                f"🎯 <b>CLAUDE BOT V4 – TÍN HIỆU MUA {best['symbol']}</b>\n"
-                f"🕐 {now:%H:%M %d/%m/%Y} | dữ liệu đóng cửa {idx_last:%d/%m}\n"
-                f"💰 Giá đóng cửa: <b>{fmt(p)}</b> – mua giá mở cửa hôm nay (khoảng {fmt(p * 0.99)} – {fmt(p * 1.01)})\n"
-                f"🎯 Chốt lời: <b>giá mua × 1.05</b> (≈ {fmt(p * 1.05)}). Từ T+2.5 đặt lệnh bán chờ ở mức này.\n"
-                f"⏰ Chưa chạm sau 20 phiên thì bán. Không đặt cắt lỗ cứng.\n"
-                f"📊 Lý do: GTGD {f['value20'] / 1e9:,.0f} tỷ/phiên · giá > MA20 > MA50 > MA200 · "
-                f"mạnh hơn VN-Index {best['rs60']:+.1f}% (60 phiên) · đang chỉnh về MA20 ({fmt(f['ma20'])}) · "
-                f"điểm chất lượng {best['score']:.0f}/100" + (f" · {n} mã đạt, chọn mã tốt nhất" if n > 1 else "") + "\n"
-                f"📈 Kiểm chứng 2023–2026: thắng 73% (37 lệnh), lãi TB +1,1%/lệnh, lệnh lỗ nặng nhất −12%. "
-                f"Chỉ nên vào tỷ trọng vừa phải.")
+            lines = [
+                f"🟢 <b>CLAUDE BOT V4 – NÊN MUA: {best['symbol']}</b>",
+                f"🕐 {now:%H:%M %d/%m/%Y} · dữ liệu đóng cửa {idx_last:%d/%m}",
+                "",
+                f"💰 Giá đóng cửa: <b>{fmt(p)}</b>",
+                f"🟢 Vùng mua: <b>{fmt(p * 0.99)} – {fmt(p * 1.01)}</b> (mua giá mở cửa hôm nay)",
+                f"🎯 Chốt lời: <b>≈ {fmt(p * 1.05)}</b> (+5% từ giá mua) – đặt lệnh bán chờ từ T+2.5",
+                "⏰ Thời hạn: tối đa 20 phiên, chưa chạm mốc thì bán",
+                "🛑 Cắt lỗ: không đặt cắt lỗ cứng",
+                "",
+                "📊 <b>Vì sao chọn:</b>",
+                f"• Thanh khoản lớn: {f['value20'] / 1e9:,.0f} tỷ/phiên",
+                "• Xu hướng tăng đủ: giá > MA20 > MA50 > MA200",
+                f"• Mạnh hơn VN-Index: {best['rs60']:+.1f}% (60 phiên)",
+                f"• Đang chỉnh về MA20 ({fmt(f['ma20'])}) – điểm mua đẹp",
+                f"• Điểm chất lượng: {best['score']:.0f}/100" + (f" (cao nhất trong {n} mã đạt)" if n > 1 else ""),
+                "",
+                "📈 Kiểm chứng 2023–2026: thắng 73% (37 lệnh) · lãi TB +1,1%/lệnh · lỗ nặng nhất −12%",
+                "⚠️ Chỉ nên vào tỷ trọng vừa phải.",
+            ]
+            msgs.append("\n".join(lines))
             st["open"] = {"symbol": best["symbol"], "signal_date": str(idx_last), "signal_price": round(p, 2),
                           "score": round(best["score"], 1)}
             st["last_signal"] = str(idx_last)
