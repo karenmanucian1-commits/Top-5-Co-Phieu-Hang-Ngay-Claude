@@ -32,7 +32,9 @@ import report
 import vci_client as vci
 
 D = config.DATA_DIR
-LOGS = {"V1": os.path.join(D, "picks_log.csv"), "V2": os.path.join(D, "picks_log_v2.csv")}
+LOGS = {"V1": os.path.join(D, "picks_log.csv"), "V2": os.path.join(D, "picks_log_v2.csv"),
+        "V4": os.path.join(D, "picks_log_v4.csv")}
+BOTS = tuple(LOGS)
 HOLD = 20
 FEE = config.FEE_ROUNDTRIP
 VN_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
@@ -70,7 +72,7 @@ def build_rows(prices, idx):
     days = list(idx["date"])
     pos = {d: i for i, d in enumerate(days)}
     rows = []
-    for bot in ("V1", "V2"):
+    for bot in BOTS:
         df = load(bot)
         if df.empty:
             continue
@@ -130,6 +132,8 @@ def build_rows(prices, idx):
                     row[f"_vni{j}"] = (ia["close"].iloc[j] / ie - 1) * 100
             plan = "Chưa chạm"
             t1, stop = r.get("t1"), r.get("stop")
+            if bot == "V4":                      # V4: chốt lời = giá mua thực tế × 1.05, không cắt lỗ
+                t1, stop = entry * 1.05, None
             for j in range(2, n):
                 # Bảo thủ: cùng phiên vừa chạm T1 vừa đóng cửa dưới cắt lỗ -> tính CẮT LỖ trước
                 if pd.notna(stop) and stop and seg["close"].iloc[j] < stop:
@@ -229,7 +233,7 @@ def sheet_summary(wb, res, now):
     ws.cell(row=r0, column=1, value="1. TỔNG QUAN").font = Font(bold=True)
     _header(ws, r0 + 1, cols)
     rr = r0 + 2
-    for bot in ("V1", "V2"):
+    for bot in BOTS:
         g = res[res["Bot"] == bot]
         if g.empty:
             continue
@@ -250,13 +254,12 @@ def sheet_summary(wb, res, now):
     # Bảng 2: lãi/lỗ trung bình theo từng phiên T0..T20
     r1 = rr + 2
     ws.cell(row=r1, column=1, value="2. LÃI/LỖ TRUNG BÌNH THEO TỪNG PHIÊN SAU KHI MUA").font = Font(bold=True)
-    cols2 = ["Phiên", "V1 số lệnh", "V1 lãi TB %", "V1 % lệnh lãi", "V1 hơn VNI %",
-             "V2 số lệnh", "V2 lãi TB %", "V2 % lệnh lãi", "V2 hơn VNI %"]
+    cols2 = ["Phiên"] + [f"{b} {x}" for b in BOTS for x in ("số lệnh", "lãi TB %", "% lệnh lãi", "hơn VNI %")]
     _header(ws, r1 + 1, cols2)
     rr = r1 + 2
     for j, t in enumerate(TCOLS):
         vals = [t]
-        for bot in ("V1", "V2"):
+        for bot in BOTS:
             g = res[(res["Bot"] == bot) & res[t].notna()]
             if len(g):
                 vni = g.get(f"_vni{j}")
@@ -269,17 +272,19 @@ def sheet_summary(wb, res, now):
                 v = None
             cell = ws.cell(row=rr, column=c, value=v)
             cell.border = BOX
-            if c in (3, 5, 7, 9):
+            if c > 1 and (c - 2) % 4 in (1, 3):
                 cell.number_format = '+0.00"%";-0.00"%";0.00"%"'
-            elif c in (4, 8):
+            elif c > 1 and (c - 2) % 4 == 2:
                 cell.number_format = '0"%"'
         rr += 1
-    for col in "CEGI":
-        _color_pct(ws, f"{col}{r1 + 2}:{col}{rr - 1}")
+    for c in range(2, len(cols2) + 1):
+        if (c - 2) % 4 in (1, 3):
+            col = get_column_letter(c)
+            _color_pct(ws, f"{col}{r1 + 2}:{col}{rr - 1}")
     ws.cell(row=rr + 1, column=1,
             value="Ghi chú: chưa đủ ~30 lệnh đủ 20 phiên thì kết quả còn ít mẫu, chưa nên kết luận bot nào tốt hơn."
             ).font = Font(italic=True, color="7F7F7F")
-    for c in range(1, 12):
+    for c in range(1, max(12, len(cols2) + 1)):
         ws.column_dimensions[get_column_letter(c)].width = 14
     ws.column_dimensions["A"].width = 10
     return ws
@@ -289,7 +294,7 @@ def make_excel(res, now, path):
     wb = Workbook()
     sheet_summary(wb, res, now)
     sheet_detail(wb, res, "Chi tiết từng mã")
-    for bot in ("V1", "V2"):
+    for bot in BOTS:
         sheet_detail(wb, res[res["Bot"] == bot] if not res.empty else res, f"Chi tiết {bot}")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     wb.save(path)

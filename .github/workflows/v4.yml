@@ -1,0 +1,42 @@
+name: CLAUDE BOT V4 (chay rieng)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: claude-top5
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cai thu vien
+        run: pip install -r requirements.txt
+      - name: Chay bot V4
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TZ: Asia/Ho_Chi_Minh
+        run: |
+          set -o pipefail
+          mkdir -p data/logs
+          python main_v4.py 2>&1 | tee data/logs/last_run_v4.log
+      - name: Luu nhat ky
+        if: always()
+        run: |
+          git config user.name "claude-top5-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/ || true
+          git diff --cached --quiet || git commit -m "Cap nhat V4"
+          git pull --rebase || true
+          git push || echo "Khong push duoc"
