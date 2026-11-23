@@ -1,17 +1,11 @@
-2026-11-23 11:35:34,993 WARNING Vietcap lỗi danh sách mã (Gọi API thất bại: https://trading.vietcap.com.vn/api/price/symbols/getAll -> 400) -> dùng bản đã lưu (1519 mã)
-2026-11-23 11:35:42,849 WARNING Không lấy được phân ngành từ Vietcap: Gọi API thất bại: https://iq.vietcap.com.vn/api/iq-insight-service/v2/company/se
-2026-11-23 11:35:42,852 WARNING Dùng phân ngành đã lưu (2119 mã)
-2026-11-23 11:35:42,852 INFO Tổng số mã: 1519
-2026-11-23 11:35:56,582 WARNING Vietcap chỉ trả lời 0/5 mã thử, KBS 5/5
-2026-11-23 11:35:56,582 INFO Nguồn dữ liệu giá cho lượt chạy này: KBS
-2026-11-23 11:35:57,285 INFO Đã tải giá 1/1 mã từ KBS (lỗi 0, 1s)
-2026-11-23 11:35:57,292 INFO Dùng danh sách thanh khoản đã lưu: tải giá 236 mã
-2026-11-23 11:36:32,523 INFO Đã tải giá 50/236 mã từ KBS (lỗi 0, 35s)
-2026-11-23 11:37:08,712 INFO Đã tải giá 100/236 mã từ KBS (lỗi 1, 71s)
-2026-11-23 11:37:44,032 INFO Đã tải giá 150/236 mã từ KBS (lỗi 1, 107s)
-2026-11-23 11:38:20,133 INFO Đã tải giá 200/236 mã từ KBS (lỗi 1, 143s)
-2026-11-23 11:38:45,770 INFO Đã tải giá 236/236 mã từ KBS (lỗi 1, 168s)
-2026-11-23 11:38:45,770 INFO Thử lại 1 mã lỗi: ITA
-2026-11-23 11:38:46,016 WARNING Thiếu dữ liệu 1 mã: ITA
-2026-11-23 11:38:46,045 INFO Tải được giá 235 mã
-2026-11-23 11:38:47,421 INFO Thanh khoản: 182 | Xu hướng tăng: 40
+2026-11-24 06:00:42,726 INFO Tổng số mã: 1519
+2026-11-24 06:00:44,851 INFO Nguồn dữ liệu giá cho lượt chạy này: Vietcap
+2026-11-24 06:00:45,576 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-24 06:00:45,583 INFO Dùng danh sách thanh khoản đã lưu: tải giá 236 mã
+2026-11-24 06:01:16,313 INFO Đã tải giá 50/236 mã từ Vietcap (lỗi 0, 31s)
+2026-11-24 06:01:45,747 INFO Đã tải giá 100/236 mã từ Vietcap (lỗi 0, 60s)
+2026-11-24 06:02:15,120 INFO Đã tải giá 150/236 mã từ Vietcap (lỗi 0, 90s)
+2026-11-24 06:02:44,492 INFO Đã tải giá 200/236 mã từ Vietcap (lỗi 0, 119s)
+2026-11-24 06:03:06,023 INFO Đã tải giá 236/236 mã từ Vietcap (lỗi 0, 140s)
+2026-11-24 06:03:06,041 INFO Tải được giá 236 mã
+2026-11-24 06:03:07,432 INFO Thanh khoản: 181 | Xu hướng tăng: 45
