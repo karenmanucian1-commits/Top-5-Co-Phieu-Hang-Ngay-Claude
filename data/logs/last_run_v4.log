@@ -1,7 +1,7 @@
-2026-11-24 06:03:23,677 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 2s)
-2026-11-24 06:03:27,162 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
-2026-11-24 06:03:27,189 INFO Dùng lại giá đã tải (Vietcap): 236 mã, cần tải thêm 0 mã
-2026-11-24 06:03:27,227 INFO Tải giá 236 mã
-2026-11-24 06:03:28,564 INFO Qua lọc thanh khoản: 181 mã
-2026-11-24 06:03:29,685 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
-2026-11-24 06:03:29,686 INFO Không có tín hiệu – không gửi Telegram
+2026-11-24 11:37:45,386 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 2s)
+2026-11-24 11:37:48,613 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-24 11:37:48,624 INFO Dùng lại giá đã tải (Vietcap): 236 mã, cần tải thêm 0 mã
+2026-11-24 11:37:48,643 INFO Tải giá 236 mã
+2026-11-24 11:37:49,242 INFO Qua lọc thanh khoản: 181 mã
+2026-11-24 11:37:50,058 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-24 11:37:50,060 INFO Không có tín hiệu – không gửi Telegram
