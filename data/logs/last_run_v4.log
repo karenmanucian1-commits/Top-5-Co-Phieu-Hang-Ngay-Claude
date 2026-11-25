@@ -1,2 +1,7 @@
-2026-11-25 11:37:47,272 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 2s)
-2026-11-25 11:37:47,273 INFO Lượt trong phiên – V4 chỉ chạy lượt 6:00 (dữ liệu đóng cửa). Bỏ qua.
+2026-11-26 06:16:00,031 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-26 06:16:03,395 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-26 06:16:03,525 INFO Dùng lại giá đã tải (Vietcap): 235 mã, cần tải thêm 0 mã
+2026-11-26 06:16:03,883 INFO Tải giá 235 mã
+2026-11-26 06:16:04,703 INFO Qua lọc thanh khoản: 181 mã
+2026-11-26 06:16:05,717 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-26 06:16:05,718 INFO Không có tín hiệu – không gửi Telegram
