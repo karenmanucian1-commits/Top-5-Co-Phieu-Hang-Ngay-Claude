@@ -1,10 +1,4 @@
-2026-11-26 11:39:04,180 WARNING Vietcap lỗi danh sách mã (Gọi API thất bại: https://trading.vietcap.com.vn/api/price/symbols/getAll -> 400) -> dùng bản đã lưu (1519 mã)
-2026-11-26 11:39:11,922 WARNING Không lấy được phân ngành từ Vietcap: Gọi API thất bại: https://iq.vietcap.com.vn/api/iq-insight-service/v2/company/se
-2026-11-26 11:39:11,924 WARNING Dùng phân ngành đã lưu (2119 mã)
-2026-11-26 11:39:14,087 INFO Đã tải giá 1/1 mã từ KBS (lỗi 0, 2s)
-2026-11-26 11:39:14,097 INFO Dùng lại giá đã tải (KBS): 234 mã, cần tải thêm 1 mã
-2026-11-26 11:39:14,609 INFO Đã tải giá 1/1 mã từ KBS (lỗi 1, 1s)
-2026-11-26 11:39:14,609 INFO Thử lại 1 mã lỗi: ITA
-2026-11-26 11:39:14,862 WARNING Thiếu dữ liệu 1 mã: ITA
-2026-11-26 11:39:14,879 INFO Tải giá 234 mã
-2026-11-26 11:39:15,468 INFO Qua lọc thanh khoản: 181 mã
+2026-11-27 06:02:53,325 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
+2026-11-27 06:02:53,358 INFO Dùng lại giá đã tải (Vietcap): 235 mã, cần tải thêm 0 mã
+2026-11-27 06:02:53,385 INFO Tải giá 235 mã
+2026-11-27 06:02:54,222 INFO Qua lọc thanh khoản: 184 mã
