@@ -1,39 +1,17 @@
-2026-11-26 06:00:40,826 INFO Tổng số mã: 1519
-2026-11-26 06:00:42,499 INFO Nguồn dữ liệu giá cho lượt chạy này: Vietcap
-2026-11-26 06:00:43,113 INFO Đã tải giá 1/1 mã từ Vietcap (lỗi 0, 1s)
-2026-11-26 06:00:43,113 INFO Quét toàn thị trường: tải giá 1519 mã
-2026-11-26 06:01:12,469 INFO Đã tải giá 50/1519 mã từ Vietcap (lỗi 0, 29s)
-2026-11-26 06:01:41,839 INFO Đã tải giá 100/1519 mã từ Vietcap (lỗi 0, 59s)
-2026-11-26 06:02:11,299 INFO Đã tải giá 150/1519 mã từ Vietcap (lỗi 0, 88s)
-2026-11-26 06:02:40,666 INFO Đã tải giá 200/1519 mã từ Vietcap (lỗi 1, 118s)
-2026-11-26 06:03:10,062 INFO Đã tải giá 250/1519 mã từ Vietcap (lỗi 1, 147s)
-2026-11-26 06:03:39,576 INFO Đã tải giá 300/1519 mã từ Vietcap (lỗi 1, 176s)
-2026-11-26 06:04:08,953 INFO Đã tải giá 350/1519 mã từ Vietcap (lỗi 1, 206s)
-2026-11-26 06:04:38,230 INFO Đã tải giá 400/1519 mã từ Vietcap (lỗi 1, 235s)
-2026-11-26 06:05:07,642 INFO Đã tải giá 450/1519 mã từ Vietcap (lỗi 1, 265s)
-2026-11-26 06:05:37,369 INFO Đã tải giá 500/1519 mã từ Vietcap (lỗi 1, 294s)
-2026-11-26 06:06:06,913 INFO Đã tải giá 550/1519 mã từ Vietcap (lỗi 1, 324s)
-2026-11-26 06:06:36,258 INFO Đã tải giá 600/1519 mã từ Vietcap (lỗi 1, 353s)
-2026-11-26 06:07:05,810 INFO Đã tải giá 650/1519 mã từ Vietcap (lỗi 1, 383s)
-2026-11-26 06:07:35,332 INFO Đã tải giá 700/1519 mã từ Vietcap (lỗi 1, 412s)
-2026-11-26 06:08:04,776 INFO Đã tải giá 750/1519 mã từ Vietcap (lỗi 1, 442s)
-2026-11-26 06:08:34,193 INFO Đã tải giá 800/1519 mã từ Vietcap (lỗi 1, 471s)
-2026-11-26 06:09:03,605 INFO Đã tải giá 850/1519 mã từ Vietcap (lỗi 1, 500s)
-2026-11-26 06:09:33,132 INFO Đã tải giá 900/1519 mã từ Vietcap (lỗi 1, 530s)
-2026-11-26 06:10:02,471 INFO Đã tải giá 950/1519 mã từ Vietcap (lỗi 1, 559s)
-2026-11-26 06:10:32,183 INFO Đã tải giá 1000/1519 mã từ Vietcap (lỗi 1, 589s)
-2026-11-26 06:11:01,332 INFO Đã tải giá 1050/1519 mã từ Vietcap (lỗi 1, 618s)
-2026-11-26 06:11:30,609 INFO Đã tải giá 1100/1519 mã từ Vietcap (lỗi 1, 647s)
-2026-11-26 06:11:59,963 INFO Đã tải giá 1150/1519 mã từ Vietcap (lỗi 1, 677s)
-2026-11-26 06:12:29,132 INFO Đã tải giá 1200/1519 mã từ Vietcap (lỗi 1, 706s)
-2026-11-26 06:12:58,180 INFO Đã tải giá 1250/1519 mã từ Vietcap (lỗi 1, 735s)
-2026-11-26 06:13:27,323 INFO Đã tải giá 1300/1519 mã từ Vietcap (lỗi 1, 764s)
-2026-11-26 06:13:56,489 INFO Đã tải giá 1350/1519 mã từ Vietcap (lỗi 1, 793s)
-2026-11-26 06:14:25,704 INFO Đã tải giá 1400/1519 mã từ Vietcap (lỗi 1, 823s)
-2026-11-26 06:14:54,933 INFO Đã tải giá 1450/1519 mã từ Vietcap (lỗi 1, 852s)
-2026-11-26 06:15:24,320 INFO Đã tải giá 1500/1519 mã từ Vietcap (lỗi 1, 881s)
-2026-11-26 06:15:35,462 INFO Đã tải giá 1519/1519 mã từ Vietcap (lỗi 1, 892s)
-2026-11-26 06:15:35,462 INFO Thử lại 1 mã lỗi: UTT
-2026-11-26 06:15:35,778 WARNING Thiếu dữ liệu 1 mã: UTT
-2026-11-26 06:15:35,926 INFO Tải được giá 1518 mã
-2026-11-26 06:15:41,256 INFO Thanh khoản: 181 | Xu hướng tăng: 44
+2026-11-26 11:35:28,323 WARNING Vietcap lỗi danh sách mã (Gọi API thất bại: https://trading.vietcap.com.vn/api/price/symbols/getAll -> 400) -> dùng bản đã lưu (1519 mã)
+2026-11-26 11:35:36,040 WARNING Không lấy được phân ngành từ Vietcap: Gọi API thất bại: https://iq.vietcap.com.vn/api/iq-insight-service/v2/company/se
+2026-11-26 11:35:36,042 WARNING Dùng phân ngành đã lưu (2119 mã)
+2026-11-26 11:35:36,042 INFO Tổng số mã: 1519
+2026-11-26 11:35:49,787 WARNING Vietcap chỉ trả lời 0/5 mã thử, KBS 5/5
+2026-11-26 11:35:49,787 INFO Nguồn dữ liệu giá cho lượt chạy này: KBS
+2026-11-26 11:35:50,545 INFO Đã tải giá 1/1 mã từ KBS (lỗi 0, 1s)
+2026-11-26 11:35:50,548 INFO Dùng danh sách thanh khoản đã lưu: tải giá 235 mã
+2026-11-26 11:36:28,633 INFO Đã tải giá 50/235 mã từ KBS (lỗi 0, 38s)
+2026-11-26 11:37:08,060 INFO Đã tải giá 100/235 mã từ KBS (lỗi 1, 78s)
+2026-11-26 11:37:46,286 INFO Đã tải giá 150/235 mã từ KBS (lỗi 1, 116s)
+2026-11-26 11:38:25,859 INFO Đã tải giá 200/235 mã từ KBS (lỗi 1, 155s)
+2026-11-26 11:38:53,067 INFO Đã tải giá 235/235 mã từ KBS (lỗi 1, 183s)
+2026-11-26 11:38:53,067 INFO Thử lại 1 mã lỗi: ITA
+2026-11-26 11:38:53,329 WARNING Thiếu dữ liệu 1 mã: ITA
+2026-11-26 11:38:53,363 INFO Tải được giá 234 mã
+2026-11-26 11:38:53,973 INFO Thanh khoản: 181 | Xu hướng tăng: 29
